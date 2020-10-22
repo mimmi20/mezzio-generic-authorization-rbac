@@ -7,7 +7,7 @@ updates:
     directory: "/"
     schedule:
       interval: daily
-      time: '04:00'
+      time: '05:00'
     open-pull-requests-limit: 10
     reviewers:
       - "mimmi20"
@@ -21,6 +21,9 @@ updates:
         versions:
           - ">= 0"
       - dependency-name: phpunit/phpunit
+        versions:
+          - ">= 0"
+      - dependency-name: laminas/laminas-permissions-rbac
         versions:
           - ">= 0"
     commit-message:
