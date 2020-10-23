@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace Mezzio\GenericAuthorization\Rbac;
 
 use Laminas\Permissions\Rbac\AssertionInterface;
+use Laminas\Permissions\Rbac\Exception\InvalidArgumentException;
 use Laminas\Permissions\Rbac\Rbac;
 use Mezzio\GenericAuthorization\AuthorizationInterface;
 use Mezzio\GenericAuthorization\Exception;
@@ -22,7 +23,7 @@ final class LaminasRbac implements AuthorizationInterface
     /** @var Rbac */
     private $rbac;
 
-    /** @var AssertionInterface|null */
+    /** @var LaminasRbacAssertionInterface|null */
     private $assertion;
 
     /**
@@ -50,6 +51,10 @@ final class LaminasRbac implements AuthorizationInterface
             $this->assertion->setRequest($request);
         }
 
-        return $this->rbac->isGranted($role, $resource, $this->assertion);
+        try {
+            return $this->rbac->isGranted($role, $resource, $this->assertion);
+        } catch (InvalidArgumentException $e) {
+            throw new Exception\RuntimeException('Could not check Authorization', 0, $e);
+        }
     }
 }

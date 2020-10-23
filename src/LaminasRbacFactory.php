@@ -15,6 +15,7 @@ use Laminas\Permissions\Rbac\Exception\ExceptionInterface as RbacExceptionInterf
 use Laminas\Permissions\Rbac\Rbac;
 use Mezzio\GenericAuthorization\AuthorizationInterface;
 use Mezzio\GenericAuthorization\Exception;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 final class LaminasRbacFactory
@@ -28,35 +29,58 @@ final class LaminasRbacFactory
      */
     public function __invoke(ContainerInterface $container): AuthorizationInterface
     {
-        $config = $container->get('config')['mezzio-authorization-rbac'] ?? null;
+        try {
+            $config = $container->get('config')['mezzio-authorization-rbac'] ?? null;
+        } catch (ContainerExceptionInterface $e) {
+            throw new Exception\InvalidConfigException(
+                'Could not read mezzio-authorization-rbac config',
+                0,
+                $e
+            );
+        }
+
         if (null === $config) {
-            throw new Exception\InvalidConfigException(sprintf(
-                'Cannot create %s instance; no "mezzio-authorization-rbac" config key present',
-                LaminasRbac::class
-            ));
+            throw new Exception\InvalidConfigException(
+                sprintf(
+                    'Cannot create %s instance; no "mezzio-authorization-rbac" config key present',
+                    LaminasRbac::class
+                )
+            );
         }
 
         if (!isset($config['roles'])) {
-            throw new Exception\InvalidConfigException(sprintf(
-                'Cannot create %s instance; no mezzio-authorization-rbac.roles configured',
-                LaminasRbac::class
-            ));
+            throw new Exception\InvalidConfigException(
+                sprintf(
+                    'Cannot create %s instance; no mezzio-authorization-rbac.roles configured',
+                    LaminasRbac::class
+                )
+            );
         }
 
         if (!isset($config['permissions'])) {
-            throw new Exception\InvalidConfigException(sprintf(
-                'Cannot create %s instance; no mezzio-authorization-rbac.permissions configured',
-                LaminasRbac::class
-            ));
+            throw new Exception\InvalidConfigException(
+                sprintf(
+                    'Cannot create %s instance; no mezzio-authorization-rbac.permissions configured',
+                    LaminasRbac::class
+                )
+            );
         }
 
         $rbac = new Rbac();
         $this->injectRoles($rbac, $config['roles']);
         $this->injectPermissions($rbac, $config['permissions']);
 
-        $assertion = $container->has(LaminasRbacAssertionInterface::class)
-            ? $container->get(LaminasRbacAssertionInterface::class)
-            : null;
+        try {
+            $assertion = $container->has(LaminasRbacAssertionInterface::class)
+                ? $container->get(LaminasRbacAssertionInterface::class)
+                : null;
+        } catch (ContainerExceptionInterface $e) {
+            throw new Exception\InvalidConfigException(
+                'Could not load the LaminasRbacAssertionInterface',
+                0,
+                $e
+            );
+        }
 
         return new LaminasRbac($rbac, $assertion);
     }
