@@ -1,9 +1,14 @@
 <?php
+/**
+ * This file is part of the mimmi20/mezzio-generic-authorization-rbac package.
+ *
+ * Copyright (c) 2020, Thomas Mueller <mimmi20@live.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-
-
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mezzio\GenericAuthorization\Rbac;
 
 use Laminas\Permissions\Rbac\Exception\ExceptionInterface as RbacExceptionInterface;
@@ -12,14 +17,16 @@ use Mezzio\GenericAuthorization\AuthorizationInterface;
 use Mezzio\GenericAuthorization\Exception;
 use Psr\Container\ContainerInterface;
 
-use function sprintf;
-
-class LaminasRbacFactory
+final class LaminasRbacFactory
 {
     /**
+     * @param ContainerInterface $container
+     *
      * @throws Exception\InvalidConfigException
+     *
+     * @return AuthorizationInterface
      */
-    public function __invoke(ContainerInterface $container) : AuthorizationInterface
+    public function __invoke(ContainerInterface $container): AuthorizationInterface
     {
         $config = $container->get('config')['mezzio-authorization-rbac'] ?? null;
         if (null === $config) {
@@ -28,13 +35,15 @@ class LaminasRbacFactory
                 LaminasRbac::class
             ));
         }
-        if (! isset($config['roles'])) {
+
+        if (!isset($config['roles'])) {
             throw new Exception\InvalidConfigException(sprintf(
                 'Cannot create %s instance; no mezzio-authorization-rbac.roles configured',
                 LaminasRbac::class
             ));
         }
-        if (! isset($config['permissions'])) {
+
+        if (!isset($config['permissions'])) {
             throw new Exception\InvalidConfigException(sprintf(
                 'Cannot create %s instance; no mezzio-authorization-rbac.permissions configured',
                 LaminasRbac::class
@@ -47,17 +56,20 @@ class LaminasRbacFactory
 
         $assertion = $container->has(LaminasRbacAssertionInterface::class)
             ? $container->get(LaminasRbacAssertionInterface::class)
-            : ($container->has(\Zend\Expressive\Authorization\Rbac\ZendRbacAssertionInterface::class)
-                ? $container->get(\Zend\Expressive\Authorization\Rbac\ZendRbacAssertionInterface::class)
-                : null);
+            : null;
 
         return new LaminasRbac($rbac, $assertion);
     }
 
     /**
+     * @param Rbac  $rbac
+     * @param array $roles
+     *
      * @throws Exception\InvalidConfigException
+     *
+     * @return void
      */
-    private function injectRoles(Rbac $rbac, array $roles) : void
+    private function injectRoles(Rbac $rbac, array $roles): void
     {
         $rbac->setCreateMissingRoles(true);
 
@@ -72,9 +84,14 @@ class LaminasRbacFactory
     }
 
     /**
+     * @param Rbac  $rbac
+     * @param array $specification
+     *
      * @throws Exception\InvalidConfigException
+     *
+     * @return void
      */
-    private function injectPermissions(Rbac $rbac, array $specification) : void
+    private function injectPermissions(Rbac $rbac, array $specification): void
     {
         foreach ($specification as $role => $permissions) {
             foreach ($permissions as $permission) {

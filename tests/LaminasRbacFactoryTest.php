@@ -1,9 +1,14 @@
 <?php
+/**
+ * This file is part of the mimmi20/mezzio-generic-authorization-rbac package.
+ *
+ * Copyright (c) 2020, Thomas Mueller <mimmi20@live.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-
-
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace MezzioTest\GenericAuthorization\Rbac;
 
 use Mezzio\GenericAuthorization\Exception;
@@ -14,17 +19,23 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 
-class LaminasRbacFactoryTest extends TestCase
+final class LaminasRbacFactoryTest extends TestCase
 {
     /** @var ContainerInterface|ObjectProphecy */
     private $container;
 
-    protected function setUp() : void
+    /**
+     * @return void
+     */
+    protected function setUp(): void
     {
         $this->container = $this->prophesize(ContainerInterface::class);
     }
 
-    public function testFactoryWithoutConfig()
+    /**
+     * @return void
+     */
+    public function testFactoryWithoutConfig(): void
     {
         $this->container->get('config')->willReturn([]);
 
@@ -35,7 +46,10 @@ class LaminasRbacFactoryTest extends TestCase
         $factory($this->container->reveal());
     }
 
-    public function testFactoryWithoutLaminasRbacConfig()
+    /**
+     * @return void
+     */
+    public function testFactoryWithoutLaminasRbacConfig(): void
     {
         $this->container->get('config')->willReturn(['mezzio-authorization-rbac' => []]);
 
@@ -46,12 +60,15 @@ class LaminasRbacFactoryTest extends TestCase
         $factory($this->container->reveal());
     }
 
-    public function testFactoryWithoutPermissions()
+    /**
+     * @return void
+     */
+    public function testFactoryWithoutPermissions(): void
     {
         $this->container->get('config')->willReturn([
             'mezzio-authorization-rbac' => [
-                'roles' => []
-            ]
+                'roles' => [],
+            ],
         ]);
 
         $factory = new LaminasRbacFactory();
@@ -61,91 +78,95 @@ class LaminasRbacFactoryTest extends TestCase
         $factory($this->container->reveal());
     }
 
-    public function testFactoryWithEmptyRolesPermissionsWithoutAssertion()
+    /**
+     * @return void
+     */
+    public function testFactoryWithEmptyRolesPermissionsWithoutAssertion(): void
     {
         $this->container->get('config')->willReturn([
             'mezzio-authorization-rbac' => [
                 'roles' => [],
-                'permissions' => []
-            ]
+                'permissions' => [],
+            ],
         ]);
         $this->container->has(LaminasRbacAssertionInterface::class)->willReturn(false);
         $this->container->has(\Zend\Expressive\Authorization\Rbac\ZendRbacAssertionInterface::class)->willReturn(false);
 
-        $factory = new LaminasRbacFactory();
+        $factory     = new LaminasRbacFactory();
         $laminasRbac = $factory($this->container->reveal());
-        $this->assertInstanceOf(LaminasRbac::class, $laminasRbac);
+        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    public function testFactoryWithEmptyRolesPermissionsWithAssertion()
+    /**
+     * @return void
+     */
+    public function testFactoryWithEmptyRolesPermissionsWithAssertion(): void
     {
         $this->container->get('config')->willReturn([
             'mezzio-authorization-rbac' => [
                 'roles' => [],
-                'permissions' => []
-            ]
+                'permissions' => [],
+            ],
         ]);
 
         $assertion = $this->prophesize(LaminasRbacAssertionInterface::class);
         $this->container->has(LaminasRbacAssertionInterface::class)->willReturn(true);
         $this->container->get(LaminasRbacAssertionInterface::class)->willReturn($assertion->reveal());
 
-        $factory = new LaminasRbacFactory();
+        $factory     = new LaminasRbacFactory();
         $laminasRbac = $factory($this->container->reveal());
-        $this->assertInstanceOf(LaminasRbac::class, $laminasRbac);
+        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    public function testFactoryWithoutAssertion()
+    /**
+     * @return void
+     */
+    public function testFactoryWithoutAssertion(): void
     {
         $this->container->get('config')->willReturn([
             'mezzio-authorization-rbac' => [
                 'roles' => [
                     'administrator' => [],
-                    'editor'        => ['administrator'],
-                    'contributor'   => ['editor'],
+                    'editor' => ['administrator'],
+                    'contributor' => ['editor'],
                 ],
                 'permissions' => [
                     'contributor' => [
                         'admin.dashboard',
                         'admin.posts',
                     ],
-                    'editor' => [
-                        'admin.publish',
-                    ],
-                    'administrator' => [
-                        'admin.settings',
-                    ],
+                    'editor' => ['admin.publish'],
+                    'administrator' => ['admin.settings'],
                 ],
             ],
         ]);
         $this->container->has(LaminasRbacAssertionInterface::class)->willReturn(false);
         $this->container->has(\Zend\Expressive\Authorization\Rbac\ZendRbacAssertionInterface::class)->willReturn(false);
 
-        $factory = new LaminasRbacFactory();
+        $factory     = new LaminasRbacFactory();
         $laminasRbac = $factory($this->container->reveal());
-        $this->assertInstanceOf(LaminasRbac::class, $laminasRbac);
+        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    public function testFactoryWithAssertion()
+    /**
+     * @return void
+     */
+    public function testFactoryWithAssertion(): void
     {
         $this->container->get('config')->willReturn([
             'mezzio-authorization-rbac' => [
                 'roles' => [
                     'administrator' => [],
-                    'editor'        => ['administrator'],
-                    'contributor'   => ['editor'],
+                    'editor' => ['administrator'],
+                    'contributor' => ['editor'],
                 ],
                 'permissions' => [
                     'contributor' => [
                         'admin.dashboard',
                         'admin.posts',
                     ],
-                    'editor' => [
-                        'admin.publish',
-                    ],
-                    'administrator' => [
-                        'admin.settings',
-                    ],
+                    'editor' => ['admin.publish'],
+                    'administrator' => ['admin.settings'],
                 ],
             ],
         ]);
@@ -153,12 +174,15 @@ class LaminasRbacFactoryTest extends TestCase
         $this->container->has(LaminasRbacAssertionInterface::class)->willReturn(true);
         $this->container->get(LaminasRbacAssertionInterface::class)->willReturn($assertion->reveal());
 
-        $factory = new LaminasRbacFactory();
+        $factory     = new LaminasRbacFactory();
         $laminasRbac = $factory($this->container->reveal());
-        $this->assertInstanceOf(LaminasRbac::class, $laminasRbac);
+        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    public function testFactoryWithInvalidRole()
+    /**
+     * @return void
+     */
+    public function testFactoryWithInvalidRole(): void
     {
         $this->container->get('config')->willReturn([
             'mezzio-authorization-rbac' => [
@@ -177,7 +201,10 @@ class LaminasRbacFactoryTest extends TestCase
         $factory($this->container->reveal());
     }
 
-    public function testFactoryWithUnknownRole()
+    /**
+     * @return void
+     */
+    public function testFactoryWithUnknownRole(): void
     {
         $this->container->get('config')->willReturn([
             'mezzio-authorization-rbac' => [
@@ -188,9 +215,9 @@ class LaminasRbacFactoryTest extends TestCase
                     'contributor' => [
                         'admin.dashboard',
                         'admin.posts',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ]);
         $this->container->has(LaminasRbacAssertionInterface::class)->willReturn(false);
         $this->container->has(\Zend\Expressive\Authorization\Rbac\ZendRbacAssertionInterface::class)->willReturn(false);

@@ -1,9 +1,14 @@
 <?php
+/**
+ * This file is part of the mimmi20/mezzio-generic-authorization-rbac package.
+ *
+ * Copyright (c) 2020, Thomas Mueller <mimmi20@live.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-
-
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace MezzioTest\GenericAuthorization\Rbac;
 
 use Laminas\Permissions\Rbac\Rbac;
@@ -16,33 +21,45 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ServerRequestInterface;
 
-class LaminasRbacTest extends TestCase
+final class LaminasRbacTest extends TestCase
 {
-    /** @var Rbac|ObjectProphecy */
+    /** @var ObjectProphecy|Rbac */
     private $rbac;
 
     /** @var LaminasRbacAssertionInterface|ObjectProphecy */
     private $assertion;
 
-    protected function setUp() : void
+    /**
+     * @return void
+     */
+    protected function setUp(): void
     {
-        $this->rbac = $this->prophesize(Rbac::class);
+        $this->rbac      = $this->prophesize(Rbac::class);
         $this->assertion = $this->prophesize(LaminasRbacAssertionInterface::class);
     }
 
-    public function testConstructorWithoutAssertion()
+    /**
+     * @return void
+     */
+    public function testConstructorWithoutAssertion(): void
     {
         $laminasRbac = new LaminasRbac($this->rbac->reveal());
-        $this->assertInstanceOf(LaminasRbac::class, $laminasRbac);
+        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    public function testConstructorWithAssertion()
+    /**
+     * @return void
+     */
+    public function testConstructorWithAssertion(): void
     {
         $laminasRbac = new LaminasRbac($this->rbac->reveal(), $this->assertion->reveal());
-        $this->assertInstanceOf(LaminasRbac::class, $laminasRbac);
+        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    public function testIsGrantedWithoutRouteResult()
+    /**
+     * @return void
+     */
+    public function testIsGrantedWithoutRouteResult(): void
     {
         $laminasRbac = new LaminasRbac($this->rbac->reveal(), $this->assertion->reveal());
 
@@ -53,7 +70,10 @@ class LaminasRbacTest extends TestCase
         $laminasRbac->isGranted('foo', $request->reveal());
     }
 
-    public function testIsGrantedWithoutAssertion()
+    /**
+     * @return void
+     */
+    public function testIsGrantedWithoutAssertion(): void
     {
         $this->rbac->isGranted('foo', 'home', null)->willReturn(true);
         $laminasRbac = new LaminasRbac($this->rbac->reveal());
@@ -64,10 +84,13 @@ class LaminasRbacTest extends TestCase
         $request->getAttribute(RouteResult::class, false)->willReturn($routeResult);
 
         $result = $laminasRbac->isGranted('foo', $request->reveal());
-        $this->assertTrue($result);
+        self::assertTrue($result);
     }
 
-    public function testIsNotGrantedWithoutAssertion()
+    /**
+     * @return void
+     */
+    public function testIsNotGrantedWithoutAssertion(): void
     {
         $this->rbac->isGranted('foo', 'home', null)->willReturn(false);
         $laminasRbac = new LaminasRbac($this->rbac->reveal());
@@ -78,10 +101,13 @@ class LaminasRbacTest extends TestCase
         $request->getAttribute(RouteResult::class, false)->willReturn($routeResult);
 
         $result = $laminasRbac->isGranted('foo', $request->reveal());
-        $this->assertFalse($result);
+        self::assertFalse($result);
     }
 
-    public function testIsGrantedWitAssertion()
+    /**
+     * @return void
+     */
+    public function testIsGrantedWitAssertion(): void
     {
         $routeResult = $this->getSuccessRouteResult('home');
 
@@ -93,11 +119,14 @@ class LaminasRbacTest extends TestCase
         $laminasRbac = new LaminasRbac($this->rbac->reveal(), $this->assertion->reveal());
 
         $result = $laminasRbac->isGranted('foo', $request->reveal());
-        $this->assertTrue($result);
+        self::assertTrue($result);
         $this->assertion->setRequest($request->reveal())->shouldBeCalled();
     }
 
-    public function testIsNotGrantedWitAssertion()
+    /**
+     * @return void
+     */
+    public function testIsNotGrantedWitAssertion(): void
     {
         $routeResult = $this->getSuccessRouteResult('home');
 
@@ -109,11 +138,14 @@ class LaminasRbacTest extends TestCase
         $laminasRbac = new LaminasRbac($this->rbac->reveal(), $this->assertion->reveal());
 
         $result = $laminasRbac->isGranted('foo', $request->reveal());
-        $this->assertFalse($result);
+        self::assertFalse($result);
         $this->assertion->setRequest($request->reveal())->shouldBeCalled();
     }
 
-    public function testIsGrantedWithFailedRouting()
+    /**
+     * @return void
+     */
+    public function testIsGrantedWithFailedRouting(): void
     {
         $routeResult = $this->getFailureRouteResult(Route::HTTP_METHOD_ANY);
 
@@ -123,9 +155,14 @@ class LaminasRbacTest extends TestCase
         $laminasRbac = new LaminasRbac($this->rbac->reveal());
 
         $result = $laminasRbac->isGranted('foo', $request->reveal());
-        $this->assertTrue($result);
+        self::assertTrue($result);
     }
 
+    /**
+     * @param string $routeName
+     *
+     * @return \Mezzio\Router\RouteResult
+     */
     private function getSuccessRouteResult(string $routeName): RouteResult
     {
         $route = $this->prophesize(Route::class);
@@ -134,6 +171,11 @@ class LaminasRbacTest extends TestCase
         return RouteResult::fromRoute($route->reveal());
     }
 
+    /**
+     * @param array|null $methods
+     *
+     * @return \Mezzio\Router\RouteResult
+     */
     private function getFailureRouteResult(?array $methods): RouteResult
     {
         return RouteResult::fromRouteFailure($methods);
