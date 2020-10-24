@@ -12,172 +12,99 @@ declare(strict_types = 1);
 namespace MezzioTest\GenericAuthorization\Rbac;
 
 use Laminas\Permissions\Rbac\Rbac;
-use Mezzio\GenericAuthorization\Exception;
 use Mezzio\GenericAuthorization\Rbac\LaminasRbac;
 use Mezzio\GenericAuthorization\Rbac\LaminasRbacAssertionInterface;
-use Mezzio\Router\Route;
-use Mezzio\Router\RouteResult;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Http\Message\ServerRequestInterface;
 
 final class LaminasRbacTest extends TestCase
 {
-    /** @var ObjectProphecy|Rbac */
-    private $rbac;
-
-    /** @var LaminasRbacAssertionInterface|ObjectProphecy */
-    private $assertion;
-
     /**
-     * @return void
-     */
-    protected function setUp(): void
-    {
-        $this->rbac      = $this->prophesize(Rbac::class);
-        $this->assertion = $this->prophesize(LaminasRbacAssertionInterface::class);
-    }
-
-    /**
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     *
      * @return void
      */
     public function testConstructorWithoutAssertion(): void
     {
-        $laminasRbac = new LaminasRbac($this->rbac->reveal());
+        $rbac = $this->createMock(Rbac::class);
+
+        /** @var Rbac $rbac */
+        $laminasRbac = new LaminasRbac($rbac);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
     /**
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     *
      * @return void
      */
     public function testConstructorWithAssertion(): void
     {
-        $laminasRbac = new LaminasRbac($this->rbac->reveal(), $this->assertion->reveal());
+        $rbac      = $this->createMock(Rbac::class);
+        $assertion = $this->createMock(LaminasRbacAssertionInterface::class);
+
+        /** @var Rbac $rbac */
+        /** @var LaminasRbacAssertionInterface $assertion */
+        $laminasRbac = new LaminasRbac($rbac, $assertion);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
     /**
-     * @return void
-     */
-    public function testIsGrantedWithoutRouteResult(): void
-    {
-        $laminasRbac = new LaminasRbac($this->rbac->reveal(), $this->assertion->reveal());
-
-        $request = $this->prophesize(ServerRequestInterface::class);
-        $request->getAttribute(RouteResult::class, false)->willReturn(false);
-
-        $this->expectException(Exception\RuntimeException::class);
-        $laminasRbac->isGranted('foo', $request->reveal());
-    }
-
-    /**
+     * @throws \Mezzio\GenericAuthorization\Exception\RuntimeException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     *
      * @return void
      */
     public function testIsGrantedWithoutAssertion(): void
     {
-        $this->rbac->isGranted('foo', 'home', null)->willReturn(true);
-        $laminasRbac = new LaminasRbac($this->rbac->reveal());
+        $role     = 'foo';
+        $resource = 'bar';
 
-        $routeResult = $this->getSuccessRouteResult('home');
+        $rbac = $this->getMockBuilder(Rbac::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $rbac->expects(self::once())
+            ->method('isGranted')
+            ->with($role, $resource, null)
+            ->willReturn(true);
 
-        $request = $this->prophesize(ServerRequestInterface::class);
-        $request->getAttribute(RouteResult::class, false)->willReturn($routeResult);
+        /** @var Rbac $rbac */
+        $laminasRbac = new LaminasRbac($rbac);
+        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
 
-        $result = $laminasRbac->isGranted('foo', $request->reveal());
-        self::assertTrue($result);
+        self::assertTrue($laminasRbac->isGranted($role, $resource));
     }
 
     /**
-     * @return void
-     */
-    public function testIsNotGrantedWithoutAssertion(): void
-    {
-        $this->rbac->isGranted('foo', 'home', null)->willReturn(false);
-        $laminasRbac = new LaminasRbac($this->rbac->reveal());
-
-        $routeResult = $this->getSuccessRouteResult('home');
-
-        $request = $this->prophesize(ServerRequestInterface::class);
-        $request->getAttribute(RouteResult::class, false)->willReturn($routeResult);
-
-        $result = $laminasRbac->isGranted('foo', $request->reveal());
-        self::assertFalse($result);
-    }
-
-    /**
+     * @throws \Mezzio\GenericAuthorization\Exception\RuntimeException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     *
      * @return void
      */
     public function testIsGrantedWitAssertion(): void
     {
-        $routeResult = $this->getSuccessRouteResult('home');
+        $role      = 'foo';
+        $resource  = 'bar';
+        $assertion = $this->createMock(LaminasRbacAssertionInterface::class);
 
-        $request = $this->prophesize(ServerRequestInterface::class);
-        $request->getAttribute(RouteResult::class, false)->willReturn($routeResult);
+        $rbac = $this->getMockBuilder(Rbac::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $rbac->expects(self::once())
+            ->method('isGranted')
+            ->with($role, $resource, $assertion)
+            ->willReturn(true);
 
-        $this->rbac->isGranted('foo', 'home', $this->assertion->reveal())->willReturn(true);
+        /** @var Rbac $rbac */
+        /** @var LaminasRbacAssertionInterface $assertion */
+        $laminasRbac = new LaminasRbac($rbac, $assertion);
+        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
 
-        $laminasRbac = new LaminasRbac($this->rbac->reveal(), $this->assertion->reveal());
-
-        $result = $laminasRbac->isGranted('foo', $request->reveal());
-        self::assertTrue($result);
-        $this->assertion->setRequest($request->reveal())->shouldBeCalled();
-    }
-
-    /**
-     * @return void
-     */
-    public function testIsNotGrantedWitAssertion(): void
-    {
-        $routeResult = $this->getSuccessRouteResult('home');
-
-        $request = $this->prophesize(ServerRequestInterface::class);
-        $request->getAttribute(RouteResult::class, false)->willReturn($routeResult);
-
-        $this->rbac->isGranted('foo', 'home', $this->assertion->reveal())->willReturn(false);
-
-        $laminasRbac = new LaminasRbac($this->rbac->reveal(), $this->assertion->reveal());
-
-        $result = $laminasRbac->isGranted('foo', $request->reveal());
-        self::assertFalse($result);
-        $this->assertion->setRequest($request->reveal())->shouldBeCalled();
-    }
-
-    /**
-     * @return void
-     */
-    public function testIsGrantedWithFailedRouting(): void
-    {
-        $routeResult = $this->getFailureRouteResult(Route::HTTP_METHOD_ANY);
-
-        $request = $this->prophesize(ServerRequestInterface::class);
-        $request->getAttribute(RouteResult::class, false)->willReturn($routeResult);
-
-        $laminasRbac = new LaminasRbac($this->rbac->reveal());
-
-        $result = $laminasRbac->isGranted('foo', $request->reveal());
-        self::assertTrue($result);
-    }
-
-    /**
-     * @param string $routeName
-     *
-     * @return \Mezzio\Router\RouteResult
-     */
-    private function getSuccessRouteResult(string $routeName): RouteResult
-    {
-        $route = $this->prophesize(Route::class);
-        $route->getName()->willReturn($routeName);
-
-        return RouteResult::fromRoute($route->reveal());
-    }
-
-    /**
-     * @param array|null $methods
-     *
-     * @return \Mezzio\Router\RouteResult
-     */
-    private function getFailureRouteResult(?array $methods): RouteResult
-    {
-        return RouteResult::fromRouteFailure($methods);
+        self::assertTrue($laminasRbac->isGranted($role, $resource));
     }
 }

@@ -11,7 +11,6 @@
 declare(strict_types = 1);
 namespace Mezzio\GenericAuthorization\Rbac;
 
-use Laminas\Permissions\Rbac\AssertionInterface;
 use Laminas\Permissions\Rbac\Exception\InvalidArgumentException;
 use Laminas\Permissions\Rbac\Rbac;
 use Mezzio\GenericAuthorization\AuthorizationInterface;

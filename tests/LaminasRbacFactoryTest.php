@@ -16,215 +16,332 @@ use Mezzio\GenericAuthorization\Rbac\LaminasRbac;
 use Mezzio\GenericAuthorization\Rbac\LaminasRbacAssertionInterface;
 use Mezzio\GenericAuthorization\Rbac\LaminasRbacFactory;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 
 final class LaminasRbacFactoryTest extends TestCase
 {
-    /** @var ContainerInterface|ObjectProphecy */
-    private $container;
-
     /**
-     * @return void
-     */
-    protected function setUp(): void
-    {
-        $this->container = $this->prophesize(ContainerInterface::class);
-    }
-
-    /**
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     *
      * @return void
      */
     public function testFactoryWithoutConfig(): void
     {
-        $this->container->get('config')->willReturn([]);
+        $container = $this->getMockBuilder(ContainerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $container->expects(self::once())
+            ->method('get')
+            ->with('config')
+            ->willReturn([]);
+        $container->expects(self::never())
+            ->method('has');
 
         $factory = new LaminasRbacFactory();
 
         $this->expectException(Exception\InvalidConfigException::class);
-        $this->expectExceptionMessage('mezzio-authorization-rbac');
-        $factory($this->container->reveal());
+        $this->expectExceptionMessage('Cannot create Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no "mezzio-authorization-rbac" config key present');
+
+        /* @var ContainerInterface $container */
+        $factory($container);
     }
 
     /**
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     *
      * @return void
      */
     public function testFactoryWithoutLaminasRbacConfig(): void
     {
-        $this->container->get('config')->willReturn(['mezzio-authorization-rbac' => []]);
+        $container = $this->getMockBuilder(ContainerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $container->expects(self::once())
+            ->method('get')
+            ->with('config')
+            ->willReturn(['mezzio-authorization-rbac' => []]);
+        $container->expects(self::never())
+            ->method('has');
 
         $factory = new LaminasRbacFactory();
 
         $this->expectException(Exception\InvalidConfigException::class);
-        $this->expectExceptionMessage('mezzio-authorization-rbac.roles');
-        $factory($this->container->reveal());
+        $this->expectExceptionMessage('Cannot create Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no mezzio-authorization-rbac.roles configured');
+
+        /* @var ContainerInterface $container */
+        $factory($container);
     }
 
     /**
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     *
      * @return void
      */
     public function testFactoryWithoutPermissions(): void
     {
-        $this->container->get('config')->willReturn([
-            'mezzio-authorization-rbac' => [
-                'roles' => [],
-            ],
-        ]);
+        $container = $this->getMockBuilder(ContainerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $container->expects(self::once())
+            ->method('get')
+            ->with('config')
+            ->willReturn(
+                [
+                    'mezzio-authorization-rbac' => [
+                        'roles' => [],
+                    ],
+                ]
+            );
+        $container->expects(self::never())
+            ->method('has');
 
         $factory = new LaminasRbacFactory();
 
         $this->expectException(Exception\InvalidConfigException::class);
-        $this->expectExceptionMessage('mezzio-authorization-rbac.permissions');
-        $factory($this->container->reveal());
+        $this->expectExceptionMessage('Cannot create Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no mezzio-authorization-rbac.permissions configured');
+
+        /* @var ContainerInterface $container */
+        $factory($container);
     }
 
     /**
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     *
      * @return void
      */
     public function testFactoryWithEmptyRolesPermissionsWithoutAssertion(): void
     {
-        $this->container->get('config')->willReturn([
-            'mezzio-authorization-rbac' => [
-                'roles' => [],
-                'permissions' => [],
-            ],
-        ]);
-        $this->container->has(LaminasRbacAssertionInterface::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Authorization\Rbac\ZendRbacAssertionInterface::class)->willReturn(false);
+        $container = $this->getMockBuilder(ContainerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $container->expects(self::once())
+            ->method('get')
+            ->with('config')
+            ->willReturn(
+                [
+                    'mezzio-authorization-rbac' => [
+                        'roles' => [],
+                        'permissions' => [],
+                    ],
+                ]
+            );
+        $container->expects(self::once())
+            ->method('has')
+            ->with(LaminasRbacAssertionInterface::class)
+            ->willReturn(false);
 
-        $factory     = new LaminasRbacFactory();
-        $laminasRbac = $factory($this->container->reveal());
+        $factory = new LaminasRbacFactory();
+
+        /** @var ContainerInterface $container */
+        $laminasRbac = $factory($container);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
     /**
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     *
      * @return void
      */
     public function testFactoryWithEmptyRolesPermissionsWithAssertion(): void
     {
-        $this->container->get('config')->willReturn([
-            'mezzio-authorization-rbac' => [
-                'roles' => [],
-                'permissions' => [],
-            ],
-        ]);
+        $interface = $this->createMock(LaminasRbacAssertionInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $container->expects(self::exactly(2))
+            ->method('get')
+            ->withConsecutive(['config'], [LaminasRbacAssertionInterface::class])
+            ->willReturnOnConsecutiveCalls(
+                [
+                    'mezzio-authorization-rbac' => [
+                        'roles' => [],
+                        'permissions' => [],
+                    ],
+                ],
+                $interface
+            );
+        $container->expects(self::once())
+            ->method('has')
+            ->with(LaminasRbacAssertionInterface::class)
+            ->willReturn(true);
 
-        $assertion = $this->prophesize(LaminasRbacAssertionInterface::class);
-        $this->container->has(LaminasRbacAssertionInterface::class)->willReturn(true);
-        $this->container->get(LaminasRbacAssertionInterface::class)->willReturn($assertion->reveal());
+        $factory = new LaminasRbacFactory();
 
-        $factory     = new LaminasRbacFactory();
-        $laminasRbac = $factory($this->container->reveal());
+        /** @var ContainerInterface $container */
+        $laminasRbac = $factory($container);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
     /**
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     *
      * @return void
      */
     public function testFactoryWithoutAssertion(): void
     {
-        $this->container->get('config')->willReturn([
-            'mezzio-authorization-rbac' => [
-                'roles' => [
-                    'administrator' => [],
-                    'editor' => ['administrator'],
-                    'contributor' => ['editor'],
-                ],
-                'permissions' => [
-                    'contributor' => [
-                        'admin.dashboard',
-                        'admin.posts',
+        $container = $this->getMockBuilder(ContainerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $container->expects(self::once())
+            ->method('get')
+            ->with('config')
+            ->willReturn(
+                [
+                    'mezzio-authorization-rbac' => [
+                        'roles' => [
+                            'administrator' => [],
+                            'editor' => ['administrator'],
+                            'contributor' => ['editor'],
+                        ],
+                        'permissions' => [
+                            'contributor' => [
+                                'admin.dashboard',
+                                'admin.posts',
+                            ],
+                            'editor' => ['admin.publish'],
+                            'administrator' => ['admin.settings'],
+                        ],
                     ],
-                    'editor' => ['admin.publish'],
-                    'administrator' => ['admin.settings'],
-                ],
-            ],
-        ]);
-        $this->container->has(LaminasRbacAssertionInterface::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Authorization\Rbac\ZendRbacAssertionInterface::class)->willReturn(false);
+                ]
+            );
+        $container->expects(self::once())
+            ->method('has')
+            ->with(LaminasRbacAssertionInterface::class)
+            ->willReturn(false);
 
-        $factory     = new LaminasRbacFactory();
-        $laminasRbac = $factory($this->container->reveal());
+        $factory = new LaminasRbacFactory();
+
+        /** @var ContainerInterface $container */
+        $laminasRbac = $factory($container);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
     /**
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     *
      * @return void
      */
     public function testFactoryWithAssertion(): void
     {
-        $this->container->get('config')->willReturn([
-            'mezzio-authorization-rbac' => [
-                'roles' => [
-                    'administrator' => [],
-                    'editor' => ['administrator'],
-                    'contributor' => ['editor'],
-                ],
-                'permissions' => [
-                    'contributor' => [
-                        'admin.dashboard',
-                        'admin.posts',
+        $interface = $this->createMock(LaminasRbacAssertionInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $container->expects(self::exactly(2))
+            ->method('get')
+            ->withConsecutive(['config'], [LaminasRbacAssertionInterface::class])
+            ->willReturnOnConsecutiveCalls(
+                [
+                    'mezzio-authorization-rbac' => [
+                        'roles' => [
+                            'administrator' => [],
+                            'editor' => ['administrator'],
+                            'contributor' => ['editor'],
+                        ],
+                        'permissions' => [
+                            'contributor' => [
+                                'admin.dashboard',
+                                'admin.posts',
+                            ],
+                            'editor' => ['admin.publish'],
+                            'administrator' => ['admin.settings'],
+                        ],
                     ],
-                    'editor' => ['admin.publish'],
-                    'administrator' => ['admin.settings'],
                 ],
-            ],
-        ]);
-        $assertion = $this->prophesize(LaminasRbacAssertionInterface::class);
-        $this->container->has(LaminasRbacAssertionInterface::class)->willReturn(true);
-        $this->container->get(LaminasRbacAssertionInterface::class)->willReturn($assertion->reveal());
+                $interface
+            );
+        $container->expects(self::once())
+            ->method('has')
+            ->with(LaminasRbacAssertionInterface::class)
+            ->willReturn(true);
 
-        $factory     = new LaminasRbacFactory();
-        $laminasRbac = $factory($this->container->reveal());
+        $factory = new LaminasRbacFactory();
+
+        /** @var ContainerInterface $container */
+        $laminasRbac = $factory($container);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
     /**
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     *
      * @return void
      */
     public function testFactoryWithInvalidRole(): void
     {
-        $this->container->get('config')->willReturn([
-            'mezzio-authorization-rbac' => [
-                'roles' => [
-                    1 => [],
-                ],
-                'permissions' => [],
-            ],
-        ]);
-        $this->container->has(LaminasRbacAssertionInterface::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Authorization\Rbac\ZendRbacAssertionInterface::class)->willReturn(false);
+        $container = $this->getMockBuilder(ContainerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $container->expects(self::once())
+            ->method('get')
+            ->with('config')
+            ->willReturn(
+                [
+                    'mezzio-authorization-rbac' => [
+                        'roles' => [
+                            1 => [],
+                        ],
+                        'permissions' => [],
+                    ],
+                ]
+            );
+        $container->expects(self::never())
+            ->method('has');
 
         $factory = new LaminasRbacFactory();
 
         $this->expectException(Exception\InvalidConfigException::class);
-        $factory($this->container->reveal());
+        $this->expectExceptionMessage('Role must be a string or implement Laminas\Permissions\Rbac\RoleInterface');
+
+        /* @var ContainerInterface $container */
+        $factory($container);
     }
 
     /**
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     *
      * @return void
      */
     public function testFactoryWithUnknownRole(): void
     {
-        $this->container->get('config')->willReturn([
-            'mezzio-authorization-rbac' => [
-                'roles' => [
-                    'administrator' => [],
-                ],
-                'permissions' => [
-                    'contributor' => [
-                        'admin.dashboard',
-                        'admin.posts',
+        $container = $this->getMockBuilder(ContainerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $container->expects(self::once())
+            ->method('get')
+            ->with('config')
+            ->willReturn(
+                [
+                    'mezzio-authorization-rbac' => [
+                        'roles' => [
+                            'administrator' => [],
+                        ],
+                        'permissions' => [
+                            'contributor' => [
+                                'admin.dashboard',
+                                'admin.posts',
+                            ],
+                        ],
                     ],
-                ],
-            ],
-        ]);
-        $this->container->has(LaminasRbacAssertionInterface::class)->willReturn(false);
-        $this->container->has(\Zend\Expressive\Authorization\Rbac\ZendRbacAssertionInterface::class)->willReturn(false);
+                ]
+            );
+        $container->expects(self::never())
+            ->method('has');
 
         $factory = new LaminasRbacFactory();
 
         $this->expectException(Exception\InvalidConfigException::class);
-        $factory($this->container->reveal());
+        $this->expectExceptionMessage('No role with name "contributor" could be found');
+
+        /* @var ContainerInterface $container */
+        $factory($container);
     }
 }
