@@ -18,6 +18,8 @@ interface LaminasRbacAssertionInterface extends AssertionInterface
 {
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request
+     *
+     * @return void
      */
     public function setRequest(ServerRequestInterface $request): void;
 }
