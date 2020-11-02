@@ -11,6 +11,7 @@
 declare(strict_types = 1);
 namespace MezzioTest\GenericAuthorization\Rbac;
 
+use Laminas\ServiceManager\Exception\ServiceNotFoundException;
 use Mezzio\GenericAuthorization\Exception;
 use Mezzio\GenericAuthorization\Rbac\LaminasRbac;
 use Mezzio\GenericAuthorization\Rbac\LaminasRbacAssertionInterface;
@@ -41,6 +42,32 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $this->expectException(Exception\InvalidConfigException::class);
         $this->expectExceptionMessage('Cannot create Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no "mezzio-authorization-rbac" config key present');
+
+        /* @var ContainerInterface $container */
+        $factory($container);
+    }
+
+    /**
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     *
+     * @return void
+     */
+    public function testFactoryWithConfigException(): void
+    {
+        $container = $this->getMockBuilder(ContainerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $container->expects(self::once())
+            ->method('get')
+            ->with('config')
+            ->willThrowException(new ServiceNotFoundException('test'));
+        $container->expects(self::never())
+            ->method('has');
+
+        $factory = new LaminasRbacFactory();
+
+        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectExceptionMessage('Could not read mezzio-authorization-rbac config');
 
         /* @var ContainerInterface $container */
         $factory($container);
@@ -137,6 +164,41 @@ final class LaminasRbacFactoryTest extends TestCase
         /** @var ContainerInterface $container */
         $laminasRbac = $factory($container);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
+    }
+
+    /**
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     *
+     * @return void
+     */
+    public function testFactoryWithEmptyRolesPermissionsWithAssertionException(): void
+    {
+        $container = $this->getMockBuilder(ContainerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $container->expects(self::once())
+            ->method('get')
+            ->with('config')
+            ->willReturn(
+                [
+                    'mezzio-authorization-rbac' => [
+                        'roles' => [],
+                        'permissions' => [],
+                    ],
+                ]
+            );
+        $container->expects(self::once())
+            ->method('has')
+            ->with(LaminasRbacAssertionInterface::class)
+            ->willThrowException(new ServiceNotFoundException('test'));
+
+        $factory = new LaminasRbacFactory();
+
+        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectExceptionMessage('Could not load the LaminasRbacAssertionInterface');
+
+        /* @var ContainerInterface $container */
+        $factory($container);
     }
 
     /**
