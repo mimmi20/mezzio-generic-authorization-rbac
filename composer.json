@@ -1,7 +1,15 @@
 {
   "name": "mimmi20/mezzio-generic-authorization-rbac",
   "type": "library",
-  "description": "Provides a GitHub repository mezzio-generic-authorization-rbac for a PHP library, using GitHub actions.",
+  "description": "Provides a laminas-permissions-rbac adapter for mezzio-generic-authorization.",
+  "keywords": [
+    "mezzio",
+    "authorization",
+    "middleware",
+    "psr-7",
+    "psr-15",
+    "rbac"
+  ],
   "homepage": "https://github.com/mimmi20/mezzio-generic-authorization-rbac",
   "license": "MIT",
   "authors": [
