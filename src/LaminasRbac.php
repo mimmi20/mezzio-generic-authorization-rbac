@@ -38,8 +38,8 @@ final class LaminasRbac implements AuthorizationInterface
     /**
      * Check if a role is granted for a resource
      *
-     * @param string                      $role
-     * @param string                      $resource
+     * @param string|null                 $role
+     * @param string|null                 $resource
      * @param string|null                 $privilege
      * @param ServerRequestInterface|null $request
      *
@@ -47,8 +47,13 @@ final class LaminasRbac implements AuthorizationInterface
      *
      * @return bool
      */
-    public function isGranted(string $role, string $resource, ?string $privilege = null, ?ServerRequestInterface $request = null): bool
+    public function isGranted(?string $role = null, ?string $resource = null, ?string $privilege = null, ?ServerRequestInterface $request = null): bool
     {
+        // RBAC requires a role and a resource
+        if (null === $role || null === $resource) {
+            return false;
+        }
+
         if (null !== $this->assertion && null !== $request) {
             $this->assertion->setRequest($request);
         }
