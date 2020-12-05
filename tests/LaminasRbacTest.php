@@ -76,7 +76,6 @@ final class LaminasRbacTest extends TestCase
 
         /** @var Rbac $rbac */
         $laminasRbac = new LaminasRbac($rbac);
-        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
 
         self::assertTrue($laminasRbac->isGranted($role, $resource));
     }
@@ -89,7 +88,7 @@ final class LaminasRbacTest extends TestCase
      *
      * @return void
      */
-    public function testIsNotGrantedRole(): void
+    public function testIsGrantedWithoutRole(): void
     {
         $rbac = $this->getMockBuilder(Rbac::class)
             ->disableOriginalConstructor()
@@ -99,9 +98,8 @@ final class LaminasRbacTest extends TestCase
 
         /** @var Rbac $rbac */
         $laminasRbac = new LaminasRbac($rbac);
-        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
 
-        self::assertFalse($laminasRbac->isGranted());
+        self::assertTrue($laminasRbac->isGranted());
     }
 
     /**
@@ -129,7 +127,6 @@ final class LaminasRbacTest extends TestCase
         /** @var Rbac $rbac */
         /** @var LaminasRbacAssertionInterface $assertion */
         $laminasRbac = new LaminasRbac($rbac, $assertion);
-        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
 
         self::assertTrue($laminasRbac->isGranted($role, $resource));
     }
@@ -159,7 +156,6 @@ final class LaminasRbacTest extends TestCase
         /** @var Rbac $rbac */
         /** @var LaminasRbacAssertionInterface $assertion */
         $laminasRbac = new LaminasRbac($rbac, $assertion);
-        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Could not check Authorization');
@@ -200,7 +196,6 @@ final class LaminasRbacTest extends TestCase
         /** @var Rbac $rbac */
         /** @var LaminasRbacAssertionInterface $assertion */
         $laminasRbac = new LaminasRbac($rbac, $assertion);
-        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
 
         self::assertTrue($laminasRbac->isGranted($role, $resource, null, $request));
     }
