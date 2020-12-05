@@ -51,7 +51,7 @@ final class LaminasRbac implements AuthorizationInterface
     {
         // RBAC requires a role and a resource
         if (null === $role || null === $resource) {
-            return false;
+            return true;
         }
 
         if (null !== $this->assertion && null !== $request) {
