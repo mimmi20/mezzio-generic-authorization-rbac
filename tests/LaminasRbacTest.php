@@ -110,6 +110,30 @@ final class LaminasRbacTest extends TestCase
      *
      * @return void
      */
+    public function testIsGrantedWithoutResource(): void
+    {
+        $role = 'foo';
+
+        $rbac = $this->getMockBuilder(Rbac::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $rbac->expects(self::never())
+            ->method('isGranted');
+
+        /** @var Rbac $rbac */
+        $laminasRbac = new LaminasRbac($rbac);
+
+        self::assertTrue($laminasRbac->isGranted($role));
+    }
+
+    /**
+     * @throws \Mezzio\GenericAuthorization\Exception\RuntimeException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     *
+     * @return void
+     */
     public function testIsGrantedWitAssertion(): void
     {
         $role      = 'foo';
@@ -157,6 +181,7 @@ final class LaminasRbacTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Could not check Authorization');
+        $this->expectExceptionCode(0);
 
         $laminasRbac->isGranted($role, $resource);
     }
