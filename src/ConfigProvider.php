@@ -11,6 +11,8 @@
 declare(strict_types = 1);
 namespace Mezzio\GenericAuthorization\Rbac;
 
+use Mezzio\GenericAuthorization\AuthorizationInterface;
+
 final class ConfigProvider
 {
     /**
@@ -29,6 +31,9 @@ final class ConfigProvider
     public function getDependencies(): array
     {
         return [
+            'aliases' => [
+                AuthorizationInterface::class => LaminasRbac::class,
+            ],
             'factories' => [
                 LaminasRbac::class => LaminasRbacFactory::class,
             ],

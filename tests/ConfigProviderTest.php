@@ -11,6 +11,7 @@
 declare(strict_types = 1);
 namespace MezzioTest\GenericAuthorization\Rbac;
 
+use Mezzio\GenericAuthorization\AuthorizationInterface;
 use Mezzio\GenericAuthorization\Rbac\ConfigProvider;
 use Mezzio\GenericAuthorization\Rbac\LaminasRbac;
 use PHPUnit\Framework\TestCase;
@@ -44,10 +45,15 @@ final class ConfigProviderTest extends TestCase
         $dependencies = $config['dependencies'];
         self::assertIsArray($dependencies);
         self::assertArrayHasKey('factories', $dependencies);
+        self::assertArrayHasKey('aliases', $dependencies);
 
         $factories = $dependencies['factories'];
         self::assertIsArray($factories);
         self::assertArrayHasKey(LaminasRbac::class, $factories);
+
+        $aliases = $dependencies['aliases'];
+        self::assertIsArray($aliases);
+        self::assertArrayHasKey(AuthorizationInterface::class, $aliases);
     }
 
     /**
@@ -61,9 +67,14 @@ final class ConfigProviderTest extends TestCase
         $dependencies = $this->provider->getDependencies();
         self::assertIsArray($dependencies);
         self::assertArrayHasKey('factories', $dependencies);
+        self::assertArrayHasKey('aliases', $dependencies);
 
         $factories = $dependencies['factories'];
         self::assertIsArray($factories);
         self::assertArrayHasKey(LaminasRbac::class, $factories);
+
+        $aliases = $dependencies['aliases'];
+        self::assertIsArray($aliases);
+        self::assertArrayHasKey(AuthorizationInterface::class, $aliases);
     }
 }
