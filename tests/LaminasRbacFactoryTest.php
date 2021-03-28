@@ -9,6 +9,7 @@
  */
 
 declare(strict_types = 1);
+
 namespace MezzioTest\GenericAuthorization\Rbac;
 
 use Laminas\ServiceManager\Exception\ServiceNotFoundException;
@@ -18,13 +19,14 @@ use Mezzio\GenericAuthorization\Rbac\LaminasRbacAssertionInterface;
 use Mezzio\GenericAuthorization\Rbac\LaminasRbacFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use SebastianBergmann\RecursionContext\InvalidArgumentException;
+
+use function assert;
 
 final class LaminasRbacFactoryTest extends TestCase
 {
     /**
      * @throws \PHPUnit\Framework\Exception
-     *
-     * @return void
      */
     public function testFactoryWithoutConfig(): void
     {
@@ -44,14 +46,12 @@ final class LaminasRbacFactoryTest extends TestCase
         $this->expectExceptionMessage('Cannot create Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no "mezzio-authorization-rbac" config key present');
         $this->expectExceptionCode(0);
 
-        /* @var ContainerInterface $container */
+        assert($container instanceof ContainerInterface);
         $factory($container);
     }
 
     /**
      * @throws \PHPUnit\Framework\Exception
-     *
-     * @return void
      */
     public function testFactoryWithConfigException(): void
     {
@@ -71,14 +71,12 @@ final class LaminasRbacFactoryTest extends TestCase
         $this->expectExceptionMessage('Could not read mezzio-authorization-rbac config');
         $this->expectExceptionCode(0);
 
-        /* @var ContainerInterface $container */
+        assert($container instanceof ContainerInterface);
         $factory($container);
     }
 
     /**
      * @throws \PHPUnit\Framework\Exception
-     *
-     * @return void
      */
     public function testFactoryWithoutLaminasRbacConfig(): void
     {
@@ -98,14 +96,12 @@ final class LaminasRbacFactoryTest extends TestCase
         $this->expectExceptionMessage('Cannot create Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no mezzio-authorization-rbac.roles configured');
         $this->expectExceptionCode(0);
 
-        /* @var ContainerInterface $container */
+        assert($container instanceof ContainerInterface);
         $factory($container);
     }
 
     /**
      * @throws \PHPUnit\Framework\Exception
-     *
-     * @return void
      */
     public function testFactoryWithoutPermissions(): void
     {
@@ -131,15 +127,13 @@ final class LaminasRbacFactoryTest extends TestCase
         $this->expectExceptionMessage('Cannot create Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no mezzio-authorization-rbac.permissions configured');
         $this->expectExceptionCode(0);
 
-        /* @var ContainerInterface $container */
+        assert($container instanceof ContainerInterface);
         $factory($container);
     }
 
     /**
      * @throws \PHPUnit\Framework\Exception
-     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return void
+     * @throws InvalidArgumentException
      */
     public function testFactoryWithEmptyRolesPermissionsWithoutAssertion(): void
     {
@@ -164,15 +158,13 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        /** @var ContainerInterface $container */
+        assert($container instanceof ContainerInterface);
         $laminasRbac = $factory($container);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
     /**
      * @throws \PHPUnit\Framework\Exception
-     *
-     * @return void
      */
     public function testFactoryWithEmptyRolesPermissionsWithAssertionException(): void
     {
@@ -201,15 +193,13 @@ final class LaminasRbacFactoryTest extends TestCase
         $this->expectExceptionMessage('Could not load the LaminasRbacAssertionInterface');
         $this->expectExceptionCode(0);
 
-        /* @var ContainerInterface $container */
+        assert($container instanceof ContainerInterface);
         $factory($container);
     }
 
     /**
      * @throws \PHPUnit\Framework\Exception
-     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return void
+     * @throws InvalidArgumentException
      */
     public function testFactoryWithEmptyRolesPermissionsWithAssertion(): void
     {
@@ -236,16 +226,14 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        /** @var ContainerInterface $container */
+        assert($container instanceof ContainerInterface);
         $laminasRbac = $factory($container);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
     /**
      * @throws \PHPUnit\Framework\Exception
-     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return void
+     * @throws InvalidArgumentException
      */
     public function testFactoryWithoutAssertion(): void
     {
@@ -281,16 +269,14 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        /** @var ContainerInterface $container */
+        assert($container instanceof ContainerInterface);
         $laminasRbac = $factory($container);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
     /**
      * @throws \PHPUnit\Framework\Exception
-     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return void
+     * @throws InvalidArgumentException
      */
     public function testFactoryWithAssertion(): void
     {
@@ -328,15 +314,13 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        /** @var ContainerInterface $container */
+        assert($container instanceof ContainerInterface);
         $laminasRbac = $factory($container);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
     /**
      * @throws \PHPUnit\Framework\Exception
-     *
-     * @return void
      */
     public function testFactoryWithInvalidRole(): void
     {
@@ -365,14 +349,12 @@ final class LaminasRbacFactoryTest extends TestCase
         $this->expectExceptionMessage('Role must be a string or implement Laminas\Permissions\Rbac\RoleInterface');
         $this->expectExceptionCode(0);
 
-        /* @var ContainerInterface $container */
+        assert($container instanceof ContainerInterface);
         $factory($container);
     }
 
     /**
      * @throws \PHPUnit\Framework\Exception
-     *
-     * @return void
      */
     public function testFactoryWithUnknownRole(): void
     {
@@ -406,7 +388,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $this->expectExceptionMessage('No role with name "contributor" could be found');
         $this->expectExceptionCode(0);
 
-        /* @var ContainerInterface $container */
+        assert($container instanceof ContainerInterface);
         $factory($container);
     }
 }
