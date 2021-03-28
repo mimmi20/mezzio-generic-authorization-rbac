@@ -9,6 +9,7 @@
  */
 
 declare(strict_types = 1);
+
 namespace Mezzio\GenericAuthorization\Rbac;
 
 use Mezzio\GenericAuthorization\AuthorizationInterface;
@@ -16,7 +17,7 @@ use Mezzio\GenericAuthorization\AuthorizationInterface;
 final class ConfigProvider
 {
     /**
-     * @return array[]
+     * @return array<string, array<string, array<string, string>>>
      */
     public function __invoke(): array
     {
@@ -26,7 +27,7 @@ final class ConfigProvider
     }
 
     /**
-     * @return array
+     * @return array<string, array<string, string>>
      */
     public function getDependencies(): array
     {

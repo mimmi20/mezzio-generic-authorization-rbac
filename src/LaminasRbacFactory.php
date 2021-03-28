@@ -9,23 +9,23 @@
  */
 
 declare(strict_types = 1);
+
 namespace Mezzio\GenericAuthorization\Rbac;
 
 use Laminas\Permissions\Rbac\Exception\ExceptionInterface as RbacExceptionInterface;
 use Laminas\Permissions\Rbac\Rbac;
+use Laminas\Permissions\Rbac\RoleInterface;
 use Mezzio\GenericAuthorization\AuthorizationInterface;
 use Mezzio\GenericAuthorization\Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
+use function sprintf;
+
 final class LaminasRbacFactory
 {
     /**
-     * @param ContainerInterface $container
-     *
      * @throws Exception\InvalidConfigException
-     *
-     * @return AuthorizationInterface
      */
     public function __invoke(ContainerInterface $container): AuthorizationInterface
     {
@@ -86,12 +86,9 @@ final class LaminasRbacFactory
     }
 
     /**
-     * @param Rbac  $rbac
-     * @param array $roles
+     * @param array<string, (array<mixed>|RoleInterface|null)> $roles
      *
      * @throws Exception\InvalidConfigException
-     *
-     * @return void
      */
     private function injectRoles(Rbac $rbac, array $roles): void
     {
@@ -108,12 +105,9 @@ final class LaminasRbacFactory
     }
 
     /**
-     * @param Rbac  $rbac
-     * @param array $specification
+     * @param array<string, array<string>> $specification
      *
      * @throws Exception\InvalidConfigException
-     *
-     * @return void
      */
     private function injectPermissions(Rbac $rbac, array $specification): void
     {

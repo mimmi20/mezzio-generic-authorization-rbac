@@ -9,6 +9,7 @@
  */
 
 declare(strict_types = 1);
+
 namespace Mezzio\GenericAuthorization\Rbac;
 
 use Laminas\Permissions\Rbac\AssertionInterface;
@@ -16,10 +17,5 @@ use Psr\Http\Message\ServerRequestInterface;
 
 interface LaminasRbacAssertionInterface extends AssertionInterface
 {
-    /**
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     *
-     * @return void
-     */
     public function setRequest(ServerRequestInterface $request): void;
 }

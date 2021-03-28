@@ -9,6 +9,7 @@
  */
 
 declare(strict_types = 1);
+
 namespace MezzioTest\GenericAuthorization\Rbac;
 
 use Laminas\Permissions\Rbac\Exception\InvalidArgumentException;
@@ -16,49 +17,47 @@ use Laminas\Permissions\Rbac\Rbac;
 use Mezzio\GenericAuthorization\Exception\RuntimeException;
 use Mezzio\GenericAuthorization\Rbac\LaminasRbac;
 use Mezzio\GenericAuthorization\Rbac\LaminasRbacAssertionInterface;
+use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+
+use function assert;
 
 final class LaminasRbacTest extends TestCase
 {
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return void
      */
     public function testConstructorWithoutAssertion(): void
     {
         $rbac = $this->createMock(Rbac::class);
 
-        /** @var Rbac $rbac */
+        assert($rbac instanceof Rbac);
+        assert($rbac instanceof Rbac);
         $laminasRbac = new LaminasRbac($rbac);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return void
      */
     public function testConstructorWithAssertion(): void
     {
         $rbac      = $this->createMock(Rbac::class);
         $assertion = $this->createMock(LaminasRbacAssertionInterface::class);
 
-        /** @var Rbac $rbac */
-        /** @var LaminasRbacAssertionInterface $assertion */
+        assert($rbac instanceof Rbac);
+        assert($assertion instanceof LaminasRbacAssertionInterface);
         $laminasRbac = new LaminasRbac($rbac, $assertion);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
     /**
-     * @throws \Mezzio\GenericAuthorization\Exception\RuntimeException
-     * @throws \PHPUnit\Framework\Exception
+     * @throws RuntimeException
+     * @throws Exception
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return void
      */
     public function testIsGrantedWithoutAssertion(): void
     {
@@ -73,18 +72,16 @@ final class LaminasRbacTest extends TestCase
             ->with($role, $resource, null)
             ->willReturn(true);
 
-        /** @var Rbac $rbac */
+        assert($rbac instanceof Rbac);
         $laminasRbac = new LaminasRbac($rbac);
 
         self::assertTrue($laminasRbac->isGranted($role, $resource));
     }
 
     /**
-     * @throws \Mezzio\GenericAuthorization\Exception\RuntimeException
-     * @throws \PHPUnit\Framework\Exception
+     * @throws RuntimeException
+     * @throws Exception
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return void
      */
     public function testIsGrantedWithoutRole(): void
     {
@@ -94,18 +91,16 @@ final class LaminasRbacTest extends TestCase
         $rbac->expects(self::never())
             ->method('isGranted');
 
-        /** @var Rbac $rbac */
+        assert($rbac instanceof Rbac);
         $laminasRbac = new LaminasRbac($rbac);
 
         self::assertTrue($laminasRbac->isGranted());
     }
 
     /**
-     * @throws \Mezzio\GenericAuthorization\Exception\RuntimeException
-     * @throws \PHPUnit\Framework\Exception
+     * @throws RuntimeException
+     * @throws Exception
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return void
      */
     public function testIsGrantedWithoutResource(): void
     {
@@ -117,18 +112,16 @@ final class LaminasRbacTest extends TestCase
         $rbac->expects(self::never())
             ->method('isGranted');
 
-        /** @var Rbac $rbac */
+        assert($rbac instanceof Rbac);
         $laminasRbac = new LaminasRbac($rbac);
 
         self::assertTrue($laminasRbac->isGranted($role));
     }
 
     /**
-     * @throws \Mezzio\GenericAuthorization\Exception\RuntimeException
-     * @throws \PHPUnit\Framework\Exception
+     * @throws RuntimeException
+     * @throws Exception
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return void
      */
     public function testIsGrantedWitAssertion(): void
     {
@@ -144,18 +137,16 @@ final class LaminasRbacTest extends TestCase
             ->with($role, $resource, $assertion)
             ->willReturn(true);
 
-        /** @var Rbac $rbac */
-        /** @var LaminasRbacAssertionInterface $assertion */
+        assert($rbac instanceof Rbac);
+        assert($assertion instanceof LaminasRbacAssertionInterface);
         $laminasRbac = new LaminasRbac($rbac, $assertion);
 
         self::assertTrue($laminasRbac->isGranted($role, $resource));
     }
 
     /**
-     * @throws \Mezzio\GenericAuthorization\Exception\RuntimeException
-     * @throws \PHPUnit\Framework\Exception
-     *
-     * @return void
+     * @throws RuntimeException
+     * @throws Exception
      */
     public function testIsGrantedWitAssertionException(): void
     {
@@ -171,8 +162,8 @@ final class LaminasRbacTest extends TestCase
             ->with($role, $resource, $assertion)
             ->willThrowException(new InvalidArgumentException('test'));
 
-        /** @var Rbac $rbac */
-        /** @var LaminasRbacAssertionInterface $assertion */
+        assert($rbac instanceof Rbac);
+        assert($assertion instanceof LaminasRbacAssertionInterface);
         $laminasRbac = new LaminasRbac($rbac, $assertion);
 
         $this->expectException(RuntimeException::class);
@@ -183,11 +174,9 @@ final class LaminasRbacTest extends TestCase
     }
 
     /**
-     * @throws \Mezzio\GenericAuthorization\Exception\RuntimeException
-     * @throws \PHPUnit\Framework\Exception
+     * @throws RuntimeException
+     * @throws Exception
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return void
      */
     public function testIsGrantedWitAssertionAndRequest(): void
     {
@@ -211,8 +200,8 @@ final class LaminasRbacTest extends TestCase
             ->with($role, $resource, $assertion)
             ->willReturn(true);
 
-        /** @var Rbac $rbac */
-        /** @var LaminasRbacAssertionInterface $assertion */
+        assert($rbac instanceof Rbac);
+        assert($assertion instanceof LaminasRbacAssertionInterface);
         $laminasRbac = new LaminasRbac($rbac, $assertion);
 
         self::assertTrue($laminasRbac->isGranted($role, $resource, null, $request));

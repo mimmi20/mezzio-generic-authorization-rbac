@@ -9,6 +9,7 @@
  */
 
 declare(strict_types = 1);
+
 namespace Mezzio\GenericAuthorization\Rbac;
 
 use Laminas\Permissions\Rbac\Exception\InvalidArgumentException;
@@ -19,16 +20,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class LaminasRbac implements AuthorizationInterface
 {
-    /** @var Rbac */
-    private $rbac;
+    private Rbac $rbac;
 
-    /** @var LaminasRbacAssertionInterface|null */
-    private $assertion;
+    private ?LaminasRbacAssertionInterface $assertion = null;
 
-    /**
-     * @param \Laminas\Permissions\Rbac\Rbac                                       $rbac
-     * @param \Mezzio\GenericAuthorization\Rbac\LaminasRbacAssertionInterface|null $assertion
-     */
     public function __construct(Rbac $rbac, ?LaminasRbacAssertionInterface $assertion = null)
     {
         $this->rbac      = $rbac;
@@ -38,14 +33,9 @@ final class LaminasRbac implements AuthorizationInterface
     /**
      * Check if a role is granted for a resource
      *
-     * @param string|null                 $role
-     * @param string|null                 $resource
-     * @param string|null                 $privilege
-     * @param ServerRequestInterface|null $request
-     *
      * @throws Exception\RuntimeException
      *
-     * @return bool
+     * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
      */
     public function isGranted(?string $role = null, ?string $resource = null, ?string $privilege = null, ?ServerRequestInterface $request = null): bool
     {
