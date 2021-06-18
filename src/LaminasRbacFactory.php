@@ -24,6 +24,13 @@ use function sprintf;
 
 final class LaminasRbacFactory
 {
+    private Rbac $rbac;
+
+    public function __construct()
+    {
+        $this->rbac = new Rbac();
+    }
+
     /**
      * @throws Exception\InvalidConfigException
      */
@@ -66,9 +73,8 @@ final class LaminasRbacFactory
             );
         }
 
-        $rbac = new Rbac();
-        $this->injectRoles($rbac, $config['roles']);
-        $this->injectPermissions($rbac, $config['permissions']);
+        $this->injectRoles($config['roles']);
+        $this->injectPermissions($config['permissions']);
 
         try {
             $assertion = $container->has(LaminasRbacAssertionInterface::class)
@@ -82,7 +88,7 @@ final class LaminasRbacFactory
             );
         }
 
-        return new LaminasRbac($rbac, $assertion);
+        return new LaminasRbac($this->rbac, $assertion);
     }
 
     /**
@@ -90,14 +96,14 @@ final class LaminasRbacFactory
      *
      * @throws Exception\InvalidConfigException
      */
-    private function injectRoles(Rbac $rbac, array $roles): void
+    private function injectRoles(array $roles): void
     {
-        $rbac->setCreateMissingRoles(true);
+        $this->rbac->setCreateMissingRoles(true);
 
         // Roles and parents
         foreach ($roles as $role => $parents) {
             try {
-                $rbac->addRole($role, $parents);
+                $this->rbac->addRole($role, $parents);
             } catch (RbacExceptionInterface $e) {
                 throw new Exception\InvalidConfigException($e->getMessage(), $e->getCode(), $e);
             }
@@ -109,12 +115,12 @@ final class LaminasRbacFactory
      *
      * @throws Exception\InvalidConfigException
      */
-    private function injectPermissions(Rbac $rbac, array $specification): void
+    private function injectPermissions(array $specification): void
     {
         foreach ($specification as $role => $permissions) {
             foreach ($permissions as $permission) {
                 try {
-                    $rbac->getRole($role)->addPermission($permission);
+                    $this->rbac->getRole($role)->addPermission($permission);
                 } catch (RbacExceptionInterface $e) {
                     throw new Exception\InvalidConfigException($e->getMessage(), $e->getCode(), $e);
                 }
