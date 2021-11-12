@@ -20,6 +20,8 @@ use Mezzio\GenericAuthorization\Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
+use function assert;
+use function is_array;
 use function sprintf;
 
 final class LaminasRbacFactory
@@ -37,7 +39,9 @@ final class LaminasRbacFactory
     public function __invoke(ContainerInterface $container): AuthorizationInterface
     {
         try {
-            $config = $container->get('config')['mezzio-authorization-rbac'] ?? null;
+            $config = $container->get('config');
+
+            assert(is_array($config));
         } catch (ContainerExceptionInterface $e) {
             throw new Exception\InvalidConfigException(
                 'Could not read mezzio-authorization-rbac config',
@@ -45,6 +49,8 @@ final class LaminasRbacFactory
                 $e
             );
         }
+
+        $config = $config['mezzio-authorization-rbac'] ?? null;
 
         if (null === $config) {
             throw new Exception\InvalidConfigException(
@@ -88,6 +94,8 @@ final class LaminasRbacFactory
             );
         }
 
+        assert($assertion instanceof LaminasRbacAssertionInterface || null === $assertion);
+
         return new LaminasRbac($this->rbac, $assertion);
     }
 
@@ -105,7 +113,7 @@ final class LaminasRbacFactory
             try {
                 $this->rbac->addRole($role, $parents);
             } catch (RbacExceptionInterface $e) {
-                throw new Exception\InvalidConfigException($e->getMessage(), $e->getCode(), $e);
+                throw new Exception\InvalidConfigException($e->getMessage(), 0, $e);
             }
         }
     }
@@ -122,7 +130,7 @@ final class LaminasRbacFactory
                 try {
                     $this->rbac->getRole($role)->addPermission($permission);
                 } catch (RbacExceptionInterface $e) {
-                    throw new Exception\InvalidConfigException($e->getMessage(), $e->getCode(), $e);
+                    throw new Exception\InvalidConfigException($e->getMessage(), 0, $e);
                 }
             }
         }
