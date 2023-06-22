@@ -2,7 +2,7 @@
 /**
  * This file is part of the mimmi20/mezzio-generic-authorization-rbac package.
  *
- * Copyright (c) 2020-2021, Thomas Mueller <mimmi20@live.de>
+ * Copyright (c) 2020-2023, Thomas Mueller <mimmi20@live.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,7 +10,7 @@
 
 declare(strict_types = 1);
 
-namespace Mezzio\GenericAuthorization\Rbac;
+namespace Mimmi20\Mezzio\GenericAuthorization\Rbac;
 
 use Laminas\Permissions\Rbac\Exception\InvalidArgumentException;
 use Laminas\Permissions\Rbac\Rbac;
@@ -20,14 +20,12 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class LaminasRbac implements AuthorizationInterface
 {
-    private Rbac $rbac;
-
-    private ?LaminasRbacAssertionInterface $assertion = null;
-
-    public function __construct(Rbac $rbac, ?LaminasRbacAssertionInterface $assertion = null)
-    {
-        $this->rbac      = $rbac;
-        $this->assertion = $assertion;
+    /** @throws void */
+    public function __construct(
+        private readonly Rbac $rbac,
+        private LaminasRbacAssertionInterface | null $assertion = null,
+    ) {
+        // nothing to do
     }
 
     /**
@@ -37,14 +35,18 @@ final class LaminasRbac implements AuthorizationInterface
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
      */
-    public function isGranted(?string $role = null, ?string $resource = null, ?string $privilege = null, ?ServerRequestInterface $request = null): bool
-    {
+    public function isGranted(
+        string | null $role = null,
+        string | null $resource = null,
+        string | null $privilege = null,
+        ServerRequestInterface | null $request = null,
+    ): bool {
         // RBAC requires a role and a resource
-        if (null === $role || null === $resource) {
+        if ($role === null || $resource === null) {
             return true;
         }
 
-        if (null !== $this->assertion && null !== $request) {
+        if ($this->assertion !== null && $request !== null) {
             $this->assertion->setRequest($request);
         }
 
