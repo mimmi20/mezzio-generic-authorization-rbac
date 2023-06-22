@@ -39,7 +39,7 @@
     </source>
 
     <testsuites>
-        <testsuite name="laminasviewrenderer-bootstrap-form Test Suite">
+        <testsuite name="mezzio-generic-authorization-rbac Test Suite">
             <directory>tests/</directory>
         </testsuite>
     </testsuites>
