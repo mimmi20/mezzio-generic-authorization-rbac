@@ -23,7 +23,7 @@ final class LaminasRbac implements AuthorizationInterface
     /** @throws void */
     public function __construct(
         private readonly Rbac $rbac,
-        private LaminasRbacAssertionInterface | null $assertion = null,
+        private readonly LaminasRbacAssertionInterface | null $assertion = null,
     ) {
         // nothing to do
     }
