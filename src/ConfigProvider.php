@@ -2,7 +2,7 @@
 /**
  * This file is part of the mimmi20/mezzio-generic-authorization-rbac package.
  *
- * Copyright (c) 2020-2021, Thomas Mueller <mimmi20@live.de>
+ * Copyright (c) 2020-2023, Thomas Mueller <mimmi20@live.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,7 +10,7 @@
 
 declare(strict_types = 1);
 
-namespace Mezzio\GenericAuthorization\Rbac;
+namespace Mimmi20\Mezzio\GenericAuthorization\Rbac;
 
 use Mezzio\GenericAuthorization\AuthorizationInterface;
 
@@ -18,6 +18,8 @@ final class ConfigProvider
 {
     /**
      * @return array<string, array<string, array<string, string>>>
+     *
+     * @throws void
      */
     public function __invoke(): array
     {
@@ -28,6 +30,8 @@ final class ConfigProvider
 
     /**
      * @return array<string, array<string, string>>
+     *
+     * @throws void
      */
     public function getDependencies(): array
     {

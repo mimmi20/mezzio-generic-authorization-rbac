@@ -2,7 +2,7 @@
 /**
  * This file is part of the mimmi20/mezzio-generic-authorization-rbac package.
  *
- * Copyright (c) 2020-2021, Thomas Mueller <mimmi20@live.de>
+ * Copyright (c) 2020-2023, Thomas Mueller <mimmi20@live.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,29 +10,26 @@
 
 declare(strict_types = 1);
 
-namespace MezzioTest\GenericAuthorization\Rbac;
+namespace Mimmi20\Mimmi20\Mezzio\GenericAuthorization\Rbac;
 
 use Laminas\Permissions\Rbac\Rbac;
 use Laminas\Permissions\Rbac\RoleInterface;
 use Laminas\ServiceManager\Exception\ServiceNotFoundException;
 use Mezzio\GenericAuthorization\Exception;
 use Mezzio\GenericAuthorization\Exception\RuntimeException;
-use Mezzio\GenericAuthorization\Rbac\LaminasRbac;
-use Mezzio\GenericAuthorization\Rbac\LaminasRbacAssertionInterface;
-use Mezzio\GenericAuthorization\Rbac\LaminasRbacFactory;
+use Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbac;
+use Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbacAssertionInterface;
+use Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbacFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionException;
 use ReflectionProperty;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 use function assert;
 
 final class LaminasRbacFactoryTest extends TestCase
 {
-    /**
-     * @throws \PHPUnit\Framework\Exception
-     */
+    /** @throws \PHPUnit\Framework\Exception */
     public function testFactoryWithoutConfig(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -48,16 +45,16 @@ final class LaminasRbacFactoryTest extends TestCase
         $factory = new LaminasRbacFactory();
 
         $this->expectException(Exception\InvalidConfigException::class);
-        $this->expectExceptionMessage('Cannot create Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no "mezzio-authorization-rbac" config key present');
+        $this->expectExceptionMessage(
+            'Cannot create Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no "mezzio-authorization-rbac" config key present',
+        );
         $this->expectExceptionCode(0);
 
         assert($container instanceof ContainerInterface);
         $factory($container);
     }
 
-    /**
-     * @throws \PHPUnit\Framework\Exception
-     */
+    /** @throws \PHPUnit\Framework\Exception */
     public function testFactoryWithConfigException(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -80,9 +77,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $factory($container);
     }
 
-    /**
-     * @throws \PHPUnit\Framework\Exception
-     */
+    /** @throws \PHPUnit\Framework\Exception */
     public function testFactoryWithoutLaminasRbacConfig(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -98,16 +93,16 @@ final class LaminasRbacFactoryTest extends TestCase
         $factory = new LaminasRbacFactory();
 
         $this->expectException(Exception\InvalidConfigException::class);
-        $this->expectExceptionMessage('Cannot create Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no mezzio-authorization-rbac.roles configured');
+        $this->expectExceptionMessage(
+            'Cannot create Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no mezzio-authorization-rbac.roles configured',
+        );
         $this->expectExceptionCode(0);
 
         assert($container instanceof ContainerInterface);
         $factory($container);
     }
 
-    /**
-     * @throws \PHPUnit\Framework\Exception
-     */
+    /** @throws \PHPUnit\Framework\Exception */
     public function testFactoryWithoutPermissions(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -121,7 +116,7 @@ final class LaminasRbacFactoryTest extends TestCase
                     'mezzio-authorization-rbac' => [
                         'roles' => [],
                     ],
-                ]
+                ],
             );
         $container->expects(self::never())
             ->method('has');
@@ -129,17 +124,16 @@ final class LaminasRbacFactoryTest extends TestCase
         $factory = new LaminasRbacFactory();
 
         $this->expectException(Exception\InvalidConfigException::class);
-        $this->expectExceptionMessage('Cannot create Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no mezzio-authorization-rbac.permissions configured');
+        $this->expectExceptionMessage(
+            'Cannot create Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no mezzio-authorization-rbac.permissions configured',
+        );
         $this->expectExceptionCode(0);
 
         assert($container instanceof ContainerInterface);
         $factory($container);
     }
 
-    /**
-     * @throws \PHPUnit\Framework\Exception
-     * @throws InvalidArgumentException
-     */
+    /** @throws \PHPUnit\Framework\Exception */
     public function testFactoryWithEmptyRolesPermissionsWithoutAssertion(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -154,7 +148,7 @@ final class LaminasRbacFactoryTest extends TestCase
                         'roles' => [],
                         'permissions' => [],
                     ],
-                ]
+                ],
             );
         $container->expects(self::once())
             ->method('has')
@@ -168,9 +162,7 @@ final class LaminasRbacFactoryTest extends TestCase
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    /**
-     * @throws \PHPUnit\Framework\Exception
-     */
+    /** @throws \PHPUnit\Framework\Exception */
     public function testFactoryWithEmptyRolesPermissionsWithAssertionException(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -185,7 +177,7 @@ final class LaminasRbacFactoryTest extends TestCase
                         'roles' => [],
                         'permissions' => [],
                     ],
-                ]
+                ],
             );
         $container->expects(self::once())
             ->method('has')
@@ -202,27 +194,32 @@ final class LaminasRbacFactoryTest extends TestCase
         $factory($container);
     }
 
-    /**
-     * @throws \PHPUnit\Framework\Exception
-     * @throws InvalidArgumentException
-     */
+    /** @throws \PHPUnit\Framework\Exception */
     public function testFactoryWithEmptyRolesPermissionsWithAssertion(): void
     {
         $interface = $this->createMock(LaminasRbacAssertionInterface::class);
-        $container = $this->getMockBuilder(ContainerInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $container->expects(self::exactly(2))
+
+        $container = $this->createMock(ContainerInterface::class);
+        $matcher   = self::exactly(2);
+        $container->expects($matcher)
             ->method('get')
-            ->withConsecutive(['config'], [LaminasRbacAssertionInterface::class])
-            ->willReturnOnConsecutiveCalls(
-                [
-                    'mezzio-authorization-rbac' => [
-                        'roles' => [],
-                        'permissions' => [],
-                    ],
-                ],
-                $interface
+            ->willReturnCallback(
+                static function (string $id) use ($matcher, $interface): mixed {
+                    match ($matcher->numberOfInvocations()) {
+                        1 => self::assertSame('config', $id),
+                        default => self::assertSame(LaminasRbacAssertionInterface::class, $id),
+                    };
+
+                    return match ($matcher->numberOfInvocations()) {
+                        1 => [
+                            'mezzio-authorization-rbac' => [
+                                'roles' => [],
+                                'permissions' => [],
+                            ],
+                        ],
+                        default => $interface,
+                    };
+                },
             );
         $container->expects(self::once())
             ->method('has')
@@ -236,10 +233,7 @@ final class LaminasRbacFactoryTest extends TestCase
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    /**
-     * @throws \PHPUnit\Framework\Exception
-     * @throws InvalidArgumentException
-     */
+    /** @throws \PHPUnit\Framework\Exception */
     public function testFactoryWithoutAssertion(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -265,7 +259,7 @@ final class LaminasRbacFactoryTest extends TestCase
                             'administrator' => ['admin.settings'],
                         ],
                     ],
-                ]
+                ],
             );
         $container->expects(self::once())
             ->method('has')
@@ -279,38 +273,43 @@ final class LaminasRbacFactoryTest extends TestCase
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    /**
-     * @throws \PHPUnit\Framework\Exception
-     * @throws InvalidArgumentException
-     */
+    /** @throws \PHPUnit\Framework\Exception */
     public function testFactoryWithAssertion(): void
     {
         $interface = $this->createMock(LaminasRbacAssertionInterface::class);
-        $container = $this->getMockBuilder(ContainerInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $container->expects(self::exactly(2))
+
+        $container = $this->createMock(ContainerInterface::class);
+        $matcher   = self::exactly(2);
+        $container->expects($matcher)
             ->method('get')
-            ->withConsecutive(['config'], [LaminasRbacAssertionInterface::class])
-            ->willReturnOnConsecutiveCalls(
-                [
-                    'mezzio-authorization-rbac' => [
-                        'roles' => [
-                            'administrator' => [],
-                            'editor' => ['administrator'],
-                            'contributor' => ['editor'],
-                        ],
-                        'permissions' => [
-                            'contributor' => [
-                                'admin.dashboard',
-                                'admin.posts',
+            ->willReturnCallback(
+                static function (string $id) use ($matcher, $interface): mixed {
+                    match ($matcher->numberOfInvocations()) {
+                        1 => self::assertSame('config', $id),
+                        default => self::assertSame(LaminasRbacAssertionInterface::class, $id),
+                    };
+
+                    return match ($matcher->numberOfInvocations()) {
+                        1 => [
+                            'mezzio-authorization-rbac' => [
+                                'roles' => [
+                                    'administrator' => [],
+                                    'editor' => ['administrator'],
+                                    'contributor' => ['editor'],
+                                ],
+                                'permissions' => [
+                                    'contributor' => [
+                                        'admin.dashboard',
+                                        'admin.posts',
+                                    ],
+                                    'editor' => ['admin.publish'],
+                                    'administrator' => ['admin.settings'],
+                                ],
                             ],
-                            'editor' => ['admin.publish'],
-                            'administrator' => ['admin.settings'],
                         ],
-                    ],
-                ],
-                $interface
+                        default => $interface,
+                    };
+                },
             );
         $container->expects(self::once())
             ->method('has')
@@ -324,9 +323,7 @@ final class LaminasRbacFactoryTest extends TestCase
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    /**
-     * @throws \PHPUnit\Framework\Exception
-     */
+    /** @throws \PHPUnit\Framework\Exception */
     public function testFactoryWithInvalidRole(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -343,7 +340,7 @@ final class LaminasRbacFactoryTest extends TestCase
                         ],
                         'permissions' => [],
                     ],
-                ]
+                ],
             );
         $container->expects(self::never())
             ->method('has');
@@ -351,16 +348,16 @@ final class LaminasRbacFactoryTest extends TestCase
         $factory = new LaminasRbacFactory();
 
         $this->expectException(Exception\InvalidConfigException::class);
-        $this->expectExceptionMessage('Role must be a string or implement Laminas\Permissions\Rbac\RoleInterface');
+        $this->expectExceptionMessage(
+            'Role must be a string or implement Laminas\Permissions\Rbac\RoleInterface',
+        );
         $this->expectExceptionCode(0);
 
         assert($container instanceof ContainerInterface);
         $factory($container);
     }
 
-    /**
-     * @throws \PHPUnit\Framework\Exception
-     */
+    /** @throws \PHPUnit\Framework\Exception */
     public function testFactoryWithUnknownRole(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -382,7 +379,7 @@ final class LaminasRbacFactoryTest extends TestCase
                             ],
                         ],
                     ],
-                ]
+                ],
             );
         $container->expects(self::never())
             ->method('has');
@@ -399,7 +396,6 @@ final class LaminasRbacFactoryTest extends TestCase
 
     /**
      * @throws \PHPUnit\Framework\Exception
-     * @throws InvalidArgumentException
      * @throws RuntimeException
      * @throws ReflectionException
      */
@@ -407,43 +403,58 @@ final class LaminasRbacFactoryTest extends TestCase
     {
         $interface = $this->createMock(LaminasRbacAssertionInterface::class);
 
-        $container = $this->getMockBuilder(ContainerInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $container->expects(self::exactly(2))
+        $container = $this->createMock(ContainerInterface::class);
+        $matcher   = self::exactly(2);
+        $container->expects($matcher)
             ->method('get')
-            ->withConsecutive(['config'], [LaminasRbacAssertionInterface::class])
-            ->willReturnOnConsecutiveCalls(
-                [
-                    'mezzio-authorization-rbac' => [
-                        'roles' => [
-                            'administrator' => [],
-                            'editor' => ['administrator'],
-                            'contributor' => ['editor'],
-                        ],
-                        'permissions' => [
-                            'contributor' => [
-                                'admin.dashboard',
-                                'admin.posts',
+            ->willReturnCallback(
+                static function (string $id) use ($matcher, $interface): mixed {
+                    match ($matcher->numberOfInvocations()) {
+                        1 => self::assertSame('config', $id),
+                        default => self::assertSame(LaminasRbacAssertionInterface::class, $id),
+                    };
+
+                    return match ($matcher->numberOfInvocations()) {
+                        1 => [
+                            'mezzio-authorization-rbac' => [
+                                'roles' => [
+                                    'administrator' => [],
+                                    'editor' => ['administrator'],
+                                    'contributor' => ['editor'],
+                                ],
+                                'permissions' => [
+                                    'contributor' => [
+                                        'admin.dashboard',
+                                        'admin.posts',
+                                    ],
+                                    'editor' => ['admin.publish'],
+                                    'administrator' => ['admin.settings'],
+                                ],
                             ],
-                            'editor' => ['admin.publish'],
-                            'administrator' => ['admin.settings'],
                         ],
-                    ],
-                ],
-                $interface
+                        default => $interface,
+                    };
+                },
             );
         $container->expects(self::once())
             ->method('has')
             ->with(LaminasRbacAssertionInterface::class)
             ->willReturn(true);
 
-        $role1 = $this->getMockBuilder(RoleInterface::class)
+        $role1   = $this->getMockBuilder(RoleInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $role1->expects(self::exactly(2))
+        $matcher = self::exactly(2);
+        $role1->expects($matcher)
             ->method('addPermission')
-            ->withConsecutive(['admin.dashboard'], ['admin.posts']);
+            ->willReturnCallback(
+                static function (string $name) use ($matcher): void {
+                    match ($matcher->numberOfInvocations()) {
+                        2 => self::assertSame('admin.posts', $name),
+                        default => self::assertSame('admin.dashboard', $name),
+                    };
+                },
+            );
 
         $role2 = $this->getMockBuilder(RoleInterface::class)
             ->disableOriginalConstructor()
@@ -465,13 +476,42 @@ final class LaminasRbacFactoryTest extends TestCase
         $rbac->expects(self::once())
             ->method('setCreateMissingRoles')
             ->with(true);
-        $rbac->expects(self::exactly(3))
+        $matcher = self::exactly(3);
+        $rbac->expects($matcher)
             ->method('addRole')
-            ->withConsecutive(['administrator', []], ['editor', ['administrator']], ['contributor', ['editor']]);
-        $rbac->expects(self::exactly(4))
+            ->willReturnCallback(
+                static function ($role, $parents = null) use ($matcher): void {
+                    match ($matcher->numberOfInvocations()) {
+                        1 => self::assertSame('administrator', $role),
+                        2 => self::assertSame('editor', $role),
+                        default => self::assertSame('contributor', $role),
+                    };
+
+                    match ($matcher->numberOfInvocations()) {
+                        1 => self::assertSame([], $parents),
+                        2 => self::assertSame(['administrator'], $parents),
+                        default => self::assertSame(['editor'], $parents),
+                    };
+                },
+            );
+        $matcher = self::exactly(4);
+        $rbac->expects($matcher)
             ->method('getRole')
-            ->withConsecutive(['contributor'], ['contributor'], ['editor'], ['administrator'])
-            ->willReturnOnConsecutiveCalls($role1, $role1, $role2, $role3);
+            ->willReturnCallback(
+                static function (string $roleName) use ($matcher, $role1, $role2, $role3): RoleInterface {
+                    match ($matcher->numberOfInvocations()) {
+                        3 => self::assertSame('editor', $roleName),
+                        4 => self::assertSame('administrator', $roleName),
+                        default => self::assertSame('contributor', $roleName),
+                    };
+
+                    return match ($matcher->numberOfInvocations()) {
+                        3 => $role2,
+                        4 => $role3,
+                        default => $role1,
+                    };
+                },
+            );
         $rbac->expects(self::once())
             ->method('isGranted')
             ->with('contributor', 'admin.settings', $interface)
@@ -480,7 +520,6 @@ final class LaminasRbacFactoryTest extends TestCase
         $factory = new LaminasRbacFactory();
 
         $rbacProp = new ReflectionProperty($factory, 'rbac');
-        $rbacProp->setAccessible(true);
         $rbacProp->setValue($factory, $rbac);
 
         assert($container instanceof ContainerInterface);
