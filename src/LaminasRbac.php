@@ -14,8 +14,8 @@ namespace Mimmi20\Mezzio\GenericAuthorization\Rbac;
 
 use Laminas\Permissions\Rbac\Exception\InvalidArgumentException;
 use Laminas\Permissions\Rbac\Rbac;
-use Mezzio\GenericAuthorization\AuthorizationInterface;
-use Mezzio\GenericAuthorization\Exception;
+use Mimmi20\Mezzio\GenericAuthorization\AuthorizationInterface;
+use Mimmi20\Mezzio\GenericAuthorization\Exception;
 use Psr\Http\Message\ServerRequestInterface;
 
 final class LaminasRbac implements AuthorizationInterface

@@ -10,11 +10,9 @@
 
 declare(strict_types = 1);
 
-namespace Mimmi20\Mimmi20\Mezzio\GenericAuthorization\Rbac;
+namespace Mimmi20\Mezzio\GenericAuthorization\Rbac;
 
-use Mezzio\GenericAuthorization\AuthorizationInterface;
-use Mimmi20\Mezzio\GenericAuthorization\Rbac\ConfigProvider;
-use Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbac;
+use Mimmi20\Mezzio\GenericAuthorization\AuthorizationInterface;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 
