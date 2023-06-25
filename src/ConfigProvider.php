@@ -12,7 +12,7 @@ declare(strict_types = 1);
 
 namespace Mimmi20\Mezzio\GenericAuthorization\Rbac;
 
-use Mezzio\GenericAuthorization\AuthorizationInterface;
+use Mimmi20\Mezzio\GenericAuthorization\AuthorizationInterface;
 
 final class ConfigProvider
 {

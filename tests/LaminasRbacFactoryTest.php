@@ -10,16 +10,13 @@
 
 declare(strict_types = 1);
 
-namespace Mimmi20\Mimmi20\Mezzio\GenericAuthorization\Rbac;
+namespace Mimmi20\Mezzio\GenericAuthorization\Rbac;
 
 use Laminas\Permissions\Rbac\Rbac;
 use Laminas\Permissions\Rbac\RoleInterface;
 use Laminas\ServiceManager\Exception\ServiceNotFoundException;
-use Mezzio\GenericAuthorization\Exception;
-use Mezzio\GenericAuthorization\Exception\RuntimeException;
-use Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbac;
-use Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbacAssertionInterface;
-use Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbacFactory;
+use Mimmi20\Mezzio\GenericAuthorization\Exception;
+use Mimmi20\Mezzio\GenericAuthorization\Exception\RuntimeException;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionException;

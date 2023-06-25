@@ -10,13 +10,11 @@
 
 declare(strict_types = 1);
 
-namespace Mimmi20\Mimmi20\Mezzio\GenericAuthorization\Rbac;
+namespace Mimmi20\Mezzio\GenericAuthorization\Rbac;
 
 use Laminas\Permissions\Rbac\Exception\InvalidArgumentException;
 use Laminas\Permissions\Rbac\Rbac;
-use Mezzio\GenericAuthorization\Exception\RuntimeException;
-use Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbac;
-use Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbacAssertionInterface;
+use Mimmi20\Mezzio\GenericAuthorization\Exception\RuntimeException;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;

@@ -15,8 +15,8 @@ namespace Mimmi20\Mezzio\GenericAuthorization\Rbac;
 use Laminas\Permissions\Rbac\Exception\ExceptionInterface as RbacExceptionInterface;
 use Laminas\Permissions\Rbac\Rbac;
 use Laminas\Permissions\Rbac\RoleInterface;
-use Mezzio\GenericAuthorization\AuthorizationInterface;
-use Mezzio\GenericAuthorization\Exception;
+use Mimmi20\Mezzio\GenericAuthorization\AuthorizationInterface;
+use Mimmi20\Mezzio\GenericAuthorization\Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
