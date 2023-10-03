@@ -16,6 +16,7 @@ use Laminas\Permissions\Rbac\Rbac;
 use Laminas\Permissions\Rbac\RoleInterface;
 use Laminas\ServiceManager\Exception\ServiceNotFoundException;
 use Mimmi20\Mezzio\GenericAuthorization\Exception;
+use Mimmi20\Mezzio\GenericAuthorization\Exception\InvalidConfigException;
 use Mimmi20\Mezzio\GenericAuthorization\Exception\RuntimeException;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -26,7 +27,10 @@ use function assert;
 
 final class LaminasRbacFactoryTest extends TestCase
 {
-    /** @throws \PHPUnit\Framework\Exception */
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     * @throws InvalidConfigException
+     */
     public function testFactoryWithoutConfig(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -51,7 +55,10 @@ final class LaminasRbacFactoryTest extends TestCase
         $factory($container);
     }
 
-    /** @throws \PHPUnit\Framework\Exception */
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     * @throws InvalidConfigException
+     */
     public function testFactoryWithConfigException(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -74,7 +81,10 @@ final class LaminasRbacFactoryTest extends TestCase
         $factory($container);
     }
 
-    /** @throws \PHPUnit\Framework\Exception */
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     * @throws InvalidConfigException
+     */
     public function testFactoryWithoutLaminasRbacConfig(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -99,7 +109,10 @@ final class LaminasRbacFactoryTest extends TestCase
         $factory($container);
     }
 
-    /** @throws \PHPUnit\Framework\Exception */
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     * @throws InvalidConfigException
+     */
     public function testFactoryWithoutPermissions(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -130,7 +143,10 @@ final class LaminasRbacFactoryTest extends TestCase
         $factory($container);
     }
 
-    /** @throws \PHPUnit\Framework\Exception */
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     * @throws InvalidConfigException
+     */
     public function testFactoryWithEmptyRolesPermissionsWithoutAssertion(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -159,7 +175,10 @@ final class LaminasRbacFactoryTest extends TestCase
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    /** @throws \PHPUnit\Framework\Exception */
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     * @throws InvalidConfigException
+     */
     public function testFactoryWithEmptyRolesPermissionsWithAssertionException(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -191,7 +210,10 @@ final class LaminasRbacFactoryTest extends TestCase
         $factory($container);
     }
 
-    /** @throws \PHPUnit\Framework\Exception */
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     * @throws InvalidConfigException
+     */
     public function testFactoryWithEmptyRolesPermissionsWithAssertion(): void
     {
         $interface = $this->createMock(LaminasRbacAssertionInterface::class);
@@ -230,7 +252,10 @@ final class LaminasRbacFactoryTest extends TestCase
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    /** @throws \PHPUnit\Framework\Exception */
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     * @throws InvalidConfigException
+     */
     public function testFactoryWithoutAssertion(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -270,7 +295,10 @@ final class LaminasRbacFactoryTest extends TestCase
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    /** @throws \PHPUnit\Framework\Exception */
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     * @throws InvalidConfigException
+     */
     public function testFactoryWithAssertion(): void
     {
         $interface = $this->createMock(LaminasRbacAssertionInterface::class);
@@ -320,7 +348,10 @@ final class LaminasRbacFactoryTest extends TestCase
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    /** @throws \PHPUnit\Framework\Exception */
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     * @throws InvalidConfigException
+     */
     public function testFactoryWithInvalidRole(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -354,7 +385,10 @@ final class LaminasRbacFactoryTest extends TestCase
         $factory($container);
     }
 
-    /** @throws \PHPUnit\Framework\Exception */
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     * @throws InvalidConfigException
+     */
     public function testFactoryWithUnknownRole(): void
     {
         $container = $this->getMockBuilder(ContainerInterface::class)
@@ -395,6 +429,7 @@ final class LaminasRbacFactoryTest extends TestCase
      * @throws \PHPUnit\Framework\Exception
      * @throws RuntimeException
      * @throws ReflectionException
+     * @throws InvalidConfigException
      */
     public function testFactoryWithReflection(): void
     {
