@@ -21,7 +21,7 @@ You can install the mezzio-generic-authorization-rbac library with
 composer require mimmi20/mezzio-generic-authorization-rbac
 ```
 
-# Introduction
+## Introduction
 
 This component provides [Role-Based Access Control](https://en.wikipedia.org/wiki/Role-based_access_control)
 (RBAC) authorization abstraction for the [mezzio-generic-authorization](https://github.com/mimmi20/mezzio-generic-authorization)
@@ -114,7 +114,7 @@ where `$role` is the role, `$resource` is the resource, `$privilege` is an privi
 > of this library, read the blog post 
 > [Manage permissions with laminas-permissions-rbac](https://framework.zend.com/blog/2017-04-27-zend-permissions-rbac.html).
 
-# Dynamic Assertion
+## Dynamic Assertion
 
 In some cases you will need to authorize a role based on a specific HTTP request.
 For instance, imagine that you have an "editor" role that can add/update/delete
@@ -238,7 +238,6 @@ return [
     ]
 ];
 ```
-
 
 ## License
 
