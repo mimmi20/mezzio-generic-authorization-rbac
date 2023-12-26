@@ -239,7 +239,6 @@ return [
 ];
 ```
 
-
 ## License
 
 This package is licensed using the MIT License.
