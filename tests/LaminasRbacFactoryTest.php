@@ -15,9 +15,9 @@ namespace Mimmi20\Mezzio\GenericAuthorization\Rbac;
 use Laminas\Permissions\Rbac\Rbac;
 use Laminas\Permissions\Rbac\RoleInterface;
 use Laminas\ServiceManager\Exception\ServiceNotFoundException;
-use Mimmi20\Mezzio\GenericAuthorization\Exception;
 use Mimmi20\Mezzio\GenericAuthorization\Exception\InvalidConfigException;
 use Mimmi20\Mezzio\GenericAuthorization\Exception\RuntimeException;
+use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionException;
@@ -28,7 +28,7 @@ use function assert;
 final class LaminasRbacFactoryTest extends TestCase
 {
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithoutConfig(): void
@@ -45,7 +45,7 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
             'Cannot create Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no "mezzio-authorization-rbac" config key present',
         );
@@ -56,7 +56,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithConfigException(): void
@@ -73,7 +73,7 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Could not read mezzio-authorization-rbac config');
         $this->expectExceptionCode(0);
 
@@ -82,7 +82,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithoutLaminasRbacConfig(): void
@@ -99,7 +99,7 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
             'Cannot create Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no mezzio-authorization-rbac.roles configured',
         );
@@ -110,7 +110,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithoutPermissions(): void
@@ -133,7 +133,7 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
             'Cannot create Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no mezzio-authorization-rbac.permissions configured',
         );
@@ -144,7 +144,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithEmptyRolesPermissionsWithoutAssertion(): void
@@ -176,7 +176,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithEmptyRolesPermissionsWithAssertionException(): void
@@ -202,7 +202,7 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Could not load the LaminasRbacAssertionInterface');
         $this->expectExceptionCode(0);
 
@@ -211,7 +211,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithEmptyRolesPermissionsWithAssertion(): void
@@ -253,7 +253,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithoutAssertion(): void
@@ -296,7 +296,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithAssertion(): void
@@ -349,7 +349,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithInvalidRole(): void
@@ -375,7 +375,7 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
             'Role must be a string or implement Laminas\Permissions\Rbac\RoleInterface',
         );
@@ -386,7 +386,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithUnknownRole(): void
@@ -417,7 +417,7 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('No role with name "contributor" could be found');
         $this->expectExceptionCode(0);
 
@@ -426,7 +426,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws RuntimeException
      * @throws ReflectionException
      * @throws InvalidConfigException
