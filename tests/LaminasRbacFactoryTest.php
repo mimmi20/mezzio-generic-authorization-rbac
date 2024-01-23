@@ -15,7 +15,6 @@ namespace Mimmi20\Mezzio\GenericAuthorization\Rbac;
 use Laminas\Permissions\Rbac\Rbac;
 use Laminas\Permissions\Rbac\RoleInterface;
 use Laminas\ServiceManager\Exception\ServiceNotFoundException;
-use Mimmi20\Mezzio\GenericAuthorization\Exception;
 use Mimmi20\Mezzio\GenericAuthorization\Exception\InvalidConfigException;
 use Mimmi20\Mezzio\GenericAuthorization\Exception\RuntimeException;
 use PHPUnit\Framework\TestCase;
@@ -45,7 +44,7 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
             'Cannot create Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no "mezzio-authorization-rbac" config key present',
         );
@@ -73,7 +72,7 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Could not read mezzio-authorization-rbac config');
         $this->expectExceptionCode(0);
 
@@ -99,7 +98,7 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
             'Cannot create Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no mezzio-authorization-rbac.roles configured',
         );
@@ -133,7 +132,7 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
             'Cannot create Mimmi20\Mezzio\GenericAuthorization\Rbac\LaminasRbac instance; no mezzio-authorization-rbac.permissions configured',
         );
@@ -202,7 +201,7 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Could not load the LaminasRbacAssertionInterface');
         $this->expectExceptionCode(0);
 
@@ -375,7 +374,7 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
             'Role must be a string or implement Laminas\Permissions\Rbac\RoleInterface',
         );
@@ -417,7 +416,7 @@ final class LaminasRbacFactoryTest extends TestCase
 
         $factory = new LaminasRbacFactory();
 
-        $this->expectException(Exception\InvalidConfigException::class);
+        $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('No role with name "contributor" could be found');
         $this->expectExceptionCode(0);
 
