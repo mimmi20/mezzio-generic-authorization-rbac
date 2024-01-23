@@ -17,6 +17,7 @@ use Laminas\Permissions\Rbac\RoleInterface;
 use Laminas\ServiceManager\Exception\ServiceNotFoundException;
 use Mimmi20\Mezzio\GenericAuthorization\Exception\InvalidConfigException;
 use Mimmi20\Mezzio\GenericAuthorization\Exception\RuntimeException;
+use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionException;
@@ -27,7 +28,7 @@ use function assert;
 final class LaminasRbacFactoryTest extends TestCase
 {
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithoutConfig(): void
@@ -55,7 +56,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithConfigException(): void
@@ -81,7 +82,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithoutLaminasRbacConfig(): void
@@ -109,7 +110,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithoutPermissions(): void
@@ -143,7 +144,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithEmptyRolesPermissionsWithoutAssertion(): void
@@ -175,7 +176,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithEmptyRolesPermissionsWithAssertionException(): void
@@ -210,7 +211,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithEmptyRolesPermissionsWithAssertion(): void
@@ -252,7 +253,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithoutAssertion(): void
@@ -295,7 +296,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithAssertion(): void
@@ -348,7 +349,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithInvalidRole(): void
@@ -385,7 +386,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws InvalidConfigException
      */
     public function testFactoryWithUnknownRole(): void
@@ -425,7 +426,7 @@ final class LaminasRbacFactoryTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\Exception
+     * @throws Exception
      * @throws RuntimeException
      * @throws ReflectionException
      * @throws InvalidConfigException
