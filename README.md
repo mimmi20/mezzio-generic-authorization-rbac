@@ -7,8 +7,11 @@
 ## Code Status
 
 [![codecov](https://codecov.io/gh/mimmi20/mezzio-generic-authorization-rbac/branch/master/graph/badge.svg)](https://codecov.io/gh/mimmi20/mezzio-generic-authorization-rbac)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/0e603979f6f1501d4a6f/test_coverage)](https://codeclimate.com/github/mimmi20/mezzio-generic-authorization-rbac/test_coverage)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/mimmi20/mezzio-generic-authorization-rbac.svg)](https://isitmaintained.com/project/mimmi20/mezzio-generic-authorization-rbac "Average time to resolve an issue")
 [![Percentage of issues still open](https://isitmaintained.com/badge/open/mimmi20/mezzio-generic-authorization-rbac.svg)](https://isitmaintained.com/project/mimmi20/mezzio-generic-authorization-rbac "Percentage of issues still open")
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fmimmi20%2Fmezzio-generic-authorization-rbac%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/mimmi20/mezzio-generic-authorization-rbac/master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/0e603979f6f1501d4a6f/maintainability)](https://codeclimate.com/github/mimmi20/mezzio-generic-authorization-rbac/maintainability)
 
 This library provides a laminas-rbac adapter for mezzio-generic-authorization.
 
