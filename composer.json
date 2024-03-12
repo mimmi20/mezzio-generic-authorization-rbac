@@ -62,7 +62,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Mimmi20\\Mezzio\\GenericAuthorization\\Rbac\\": "test/"
+      "Mimmi20\\Mezzio\\GenericAuthorization\\Rbac\\": "tests/"
     }
   },
   "config": {
