@@ -512,7 +512,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $rbac->expects($matcher)
             ->method('addRole')
             ->willReturnCallback(
-                static function ($role, $parents = null) use ($matcher): void {
+                static function (string | RoleInterface $role, array | RoleInterface | null $parents = null) use ($matcher): void {
                     match ($matcher->numberOfInvocations()) {
                         1 => self::assertSame('administrator', $role),
                         2 => self::assertSame('editor', $role),
