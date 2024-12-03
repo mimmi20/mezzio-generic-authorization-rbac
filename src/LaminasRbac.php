@@ -17,15 +17,14 @@ use Laminas\Permissions\Rbac\Exception\InvalidArgumentException;
 use Laminas\Permissions\Rbac\Rbac;
 use Mimmi20\Mezzio\GenericAuthorization\AuthorizationInterface;
 use Mimmi20\Mezzio\GenericAuthorization\Exception;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class LaminasRbac implements AuthorizationInterface
+final readonly class LaminasRbac implements AuthorizationInterface
 {
     /** @throws void */
-    public function __construct(
-        private readonly Rbac $rbac,
-        private readonly LaminasRbacAssertionInterface | null $assertion = null,
-    ) {
+    public function __construct(private Rbac $rbac, private LaminasRbacAssertionInterface | null $assertion = null)
+    {
         // nothing to do
     }
 
@@ -36,6 +35,7 @@ final class LaminasRbac implements AuthorizationInterface
      *
      * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
      */
+    #[Override]
     public function isGranted(
         string | null $role = null,
         string | null $resource = null,
