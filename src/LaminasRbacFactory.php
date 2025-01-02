@@ -3,7 +3,7 @@
 /**
  * This file is part of the mimmi20/mezzio-generic-authorization-rbac package.
  *
- * Copyright (c) 2020-2024, Thomas Mueller <mimmi20@live.de>
+ * Copyright (c) 2020-2025, Thomas Mueller <mimmi20@live.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -52,7 +52,7 @@ final class LaminasRbacFactory
 
         $config = $config['mezzio-authorization-rbac'] ?? null;
 
-        if ($config === null) {
+        if (!is_array($config)) {
             throw new Exception\InvalidConfigException(
                 sprintf(
                     'Cannot create %s instance; no "mezzio-authorization-rbac" config key present',
@@ -61,7 +61,7 @@ final class LaminasRbacFactory
             );
         }
 
-        if (!isset($config['roles'])) {
+        if (!isset($config['roles']) || !is_array($config['roles'])) {
             throw new Exception\InvalidConfigException(
                 sprintf(
                     'Cannot create %s instance; no mezzio-authorization-rbac.roles configured',
@@ -70,7 +70,7 @@ final class LaminasRbacFactory
             );
         }
 
-        if (!isset($config['permissions'])) {
+        if (!isset($config['permissions']) || !is_array($config['permissions'])) {
             throw new Exception\InvalidConfigException(
                 sprintf(
                     'Cannot create %s instance; no mezzio-authorization-rbac.permissions configured',
