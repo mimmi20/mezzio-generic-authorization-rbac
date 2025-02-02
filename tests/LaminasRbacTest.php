@@ -35,10 +35,9 @@ final class LaminasRbacTest extends TestCase
     /** @throws Exception */
     public function testConstructorWithAssertion(): void
     {
-        $rbac      = $this->createMock(Rbac::class);
-        $assertion = $this->createMock(LaminasRbacAssertionInterface::class);
+        $rbac = $this->createMock(Rbac::class);
 
-        $laminasRbac = new LaminasRbac($rbac, $assertion);
+        $laminasRbac = new LaminasRbac($rbac);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
@@ -51,9 +50,7 @@ final class LaminasRbacTest extends TestCase
         $role     = 'foo';
         $resource = 'bar';
 
-        $rbac = $this->getMockBuilder(Rbac::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $rbac = $this->createMock(Rbac::class);
         $rbac->expects(self::once())
             ->method('isGranted')
             ->with($role, $resource, null)
@@ -70,9 +67,7 @@ final class LaminasRbacTest extends TestCase
      */
     public function testIsGrantedWithoutRole(): void
     {
-        $rbac = $this->getMockBuilder(Rbac::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $rbac = $this->createMock(Rbac::class);
         $rbac->expects(self::never())
             ->method('isGranted');
 
@@ -89,9 +84,7 @@ final class LaminasRbacTest extends TestCase
     {
         $role = 'foo';
 
-        $rbac = $this->getMockBuilder(Rbac::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $rbac = $this->createMock(Rbac::class);
         $rbac->expects(self::never())
             ->method('isGranted');
 
@@ -109,18 +102,18 @@ final class LaminasRbacTest extends TestCase
         $role      = 'foo';
         $resource  = 'bar';
         $assertion = $this->createMock(LaminasRbacAssertionInterface::class);
+        $assertion->expects(self::never())
+            ->method('setRequest');
 
-        $rbac = $this->getMockBuilder(Rbac::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $rbac = $this->createMock(Rbac::class);
         $rbac->expects(self::once())
             ->method('isGranted')
             ->with($role, $resource, $assertion)
             ->willReturn(true);
 
-        $laminasRbac = new LaminasRbac($rbac, $assertion);
+        $laminasRbac = new LaminasRbac($rbac);
 
-        self::assertTrue($laminasRbac->isGranted($role, $resource));
+        self::assertTrue($laminasRbac->isGranted($role, $resource, assertion: $assertion));
     }
 
     /**
@@ -132,22 +125,22 @@ final class LaminasRbacTest extends TestCase
         $role      = 'foo';
         $resource  = 'bar';
         $assertion = $this->createMock(LaminasRbacAssertionInterface::class);
+        $assertion->expects(self::never())
+            ->method('setRequest');
 
-        $rbac = $this->getMockBuilder(Rbac::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $rbac = $this->createMock(Rbac::class);
         $rbac->expects(self::once())
             ->method('isGranted')
             ->with($role, $resource, $assertion)
             ->willThrowException(new InvalidArgumentException('test'));
 
-        $laminasRbac = new LaminasRbac($rbac, $assertion);
+        $laminasRbac = new LaminasRbac($rbac);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Could not check Authorization');
         $this->expectExceptionCode(0);
 
-        $laminasRbac->isGranted($role, $resource);
+        $laminasRbac->isGranted($role, $resource, assertion: $assertion);
     }
 
     /**
@@ -161,23 +154,21 @@ final class LaminasRbacTest extends TestCase
 
         $request = $this->createMock(ServerRequestInterface::class);
 
-        $assertion = $this->getMockBuilder(LaminasRbacAssertionInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $assertion = $this->createMock(LaminasRbacAssertionInterface::class);
         $assertion->expects(self::once())
             ->method('setRequest')
             ->with($request);
 
-        $rbac = $this->getMockBuilder(Rbac::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $rbac = $this->createMock(Rbac::class);
         $rbac->expects(self::once())
             ->method('isGranted')
             ->with($role, $resource, $assertion)
             ->willReturn(true);
 
-        $laminasRbac = new LaminasRbac($rbac, $assertion);
+        $laminasRbac = new LaminasRbac($rbac);
 
-        self::assertTrue($laminasRbac->isGranted($role, $resource, null, $request));
+        self::assertTrue(
+            $laminasRbac->isGranted($role, $resource, null, $request, assertion: $assertion),
+        );
     }
 }
