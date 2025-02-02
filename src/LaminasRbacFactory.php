@@ -82,21 +82,7 @@ final class LaminasRbacFactory
         $this->injectRoles($config['roles']);
         $this->injectPermissions($config['permissions']);
 
-        try {
-            $assertion = $container->has(LaminasRbacAssertionInterface::class)
-                ? $container->get(LaminasRbacAssertionInterface::class)
-                : null;
-        } catch (ContainerExceptionInterface $e) {
-            throw new Exception\InvalidConfigException(
-                'Could not load the LaminasRbacAssertionInterface',
-                0,
-                $e,
-            );
-        }
-
-        assert($assertion instanceof LaminasRbacAssertionInterface || $assertion === null);
-
-        return new LaminasRbac($this->rbac, $assertion);
+        return new LaminasRbac($this->rbac);
     }
 
     /**

@@ -23,7 +23,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final readonly class LaminasRbac implements AuthorizationInterface
 {
     /** @throws void */
-    public function __construct(private Rbac $rbac, private LaminasRbacAssertionInterface | null $assertion = null)
+    public function __construct(private Rbac $rbac)
     {
         // nothing to do
     }
@@ -41,18 +41,19 @@ final readonly class LaminasRbac implements AuthorizationInterface
         string | null $resource = null,
         string | null $privilege = null,
         ServerRequestInterface | null $request = null,
+        LaminasRbacAssertionInterface | null $assertion = null,
     ): bool {
         // RBAC requires a role and a resource
         if ($role === null || $resource === null) {
             return true;
         }
 
-        if ($this->assertion !== null && $request !== null) {
-            $this->assertion->setRequest($request);
+        if ($assertion !== null && $request !== null) {
+            $assertion->setRequest($request);
         }
 
         try {
-            return $this->rbac->isGranted($role, $resource, $this->assertion);
+            return $this->rbac->isGranted($role, $resource, $assertion);
         } catch (InvalidArgumentException $e) {
             throw new Exception\RuntimeException('Could not check Authorization', 0, $e);
         }
