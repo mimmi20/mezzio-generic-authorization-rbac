@@ -18,6 +18,7 @@ use Laminas\Permissions\Rbac\RoleInterface;
 use Laminas\ServiceManager\Exception\ServiceNotFoundException;
 use Mimmi20\Mezzio\GenericAuthorization\Exception\InvalidConfigException;
 use Mimmi20\Mezzio\GenericAuthorization\Exception\RuntimeException;
+use PHPUnit\Event\NoPreviousThrowableException;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -31,6 +32,8 @@ final class LaminasRbacFactoryTest extends TestCase
     /**
      * @throws Exception
      * @throws InvalidConfigException
+     * @throws NoPreviousThrowableException
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testFactoryWithoutConfig(): void
     {
@@ -57,6 +60,8 @@ final class LaminasRbacFactoryTest extends TestCase
     /**
      * @throws Exception
      * @throws InvalidConfigException
+     * @throws NoPreviousThrowableException
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testFactoryWithConfigException(): void
     {
@@ -81,6 +86,8 @@ final class LaminasRbacFactoryTest extends TestCase
     /**
      * @throws Exception
      * @throws InvalidConfigException
+     * @throws NoPreviousThrowableException
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testFactoryWithoutLaminasRbacConfig(): void
     {
@@ -107,6 +114,8 @@ final class LaminasRbacFactoryTest extends TestCase
     /**
      * @throws Exception
      * @throws InvalidConfigException
+     * @throws NoPreviousThrowableException
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testFactoryWithoutPermissions(): void
     {
@@ -139,6 +148,8 @@ final class LaminasRbacFactoryTest extends TestCase
     /**
      * @throws Exception
      * @throws InvalidConfigException
+     * @throws NoPreviousThrowableException
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testFactoryWithEmptyRolesPermissionsWithoutAssertion(): void
     {
@@ -167,6 +178,8 @@ final class LaminasRbacFactoryTest extends TestCase
     /**
      * @throws Exception
      * @throws InvalidConfigException
+     * @throws NoPreviousThrowableException
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testFactoryWithoutAssertion(): void
     {
@@ -206,6 +219,8 @@ final class LaminasRbacFactoryTest extends TestCase
     /**
      * @throws Exception
      * @throws InvalidConfigException
+     * @throws NoPreviousThrowableException
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testFactoryWithInvalidRole(): void
     {
@@ -241,6 +256,8 @@ final class LaminasRbacFactoryTest extends TestCase
     /**
      * @throws Exception
      * @throws InvalidConfigException
+     * @throws NoPreviousThrowableException
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testFactoryWithUnknownRole(): void
     {
@@ -281,6 +298,8 @@ final class LaminasRbacFactoryTest extends TestCase
      * @throws RuntimeException
      * @throws ReflectionException
      * @throws InvalidConfigException
+     * @throws NoPreviousThrowableException
+     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testFactoryWithReflection(): void
     {

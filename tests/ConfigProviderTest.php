@@ -14,25 +14,15 @@ declare(strict_types = 1);
 namespace Mimmi20\Mezzio\GenericAuthorization\Rbac;
 
 use Mimmi20\Mezzio\GenericAuthorization\AuthorizationInterface;
-use Override;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 
 final class ConfigProviderTest extends TestCase
 {
-    private ConfigProvider $provider;
-
-    /** @throws void */
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->provider = new ConfigProvider();
-    }
-
     /** @throws Exception */
     public function testReturnedArrayContainsDependencies(): void
     {
-        $config = ($this->provider)();
+        $config = (new ConfigProvider())();
         self::assertIsArray($config);
 
         self::assertArrayHasKey('dependencies', $config);
@@ -54,7 +44,7 @@ final class ConfigProviderTest extends TestCase
     /** @throws Exception */
     public function testGetDependenciesReturnedArrayContainsDependencies(): void
     {
-        $dependencies = $this->provider->getDependencies();
+        $dependencies = (new ConfigProvider())->getDependencies();
         self::assertIsArray($dependencies);
         self::assertArrayHasKey('factories', $dependencies);
         self::assertArrayHasKey('aliases', $dependencies);
