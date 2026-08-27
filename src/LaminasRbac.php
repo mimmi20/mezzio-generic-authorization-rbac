@@ -48,7 +48,10 @@ final readonly class LaminasRbac implements AuthorizationInterface
             return true;
         }
 
-        if ($assertion !== null && $request !== null) {
+        if (
+            $assertion instanceof LaminasRbacAssertionInterface
+            && $request instanceof ServerRequestInterface
+        ) {
             $assertion->setRequest($request);
         }
 
