@@ -110,6 +110,8 @@ parameters:
   ignoreErrors:
     - '~will always evaluate to true~'
     - '~array<mixed, mixed> given~'
+    -
+      identifier: argument.named
 
 services:
   errorFormatter.sarif:
