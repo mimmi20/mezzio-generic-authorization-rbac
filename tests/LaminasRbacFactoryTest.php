@@ -45,7 +45,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $container->expects(self::never())
             ->method('has');
 
-        $factory = new LaminasRbacFactory();
+        $laminasRbacFactory = new LaminasRbacFactory();
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
@@ -54,7 +54,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $this->expectExceptionCode(0);
 
         assert($container instanceof ContainerInterface);
-        $factory($container);
+        $laminasRbacFactory($container);
     }
 
     /**
@@ -73,14 +73,14 @@ final class LaminasRbacFactoryTest extends TestCase
         $container->expects(self::never())
             ->method('has');
 
-        $factory = new LaminasRbacFactory();
+        $laminasRbacFactory = new LaminasRbacFactory();
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Could not read mezzio-authorization-rbac config');
         $this->expectExceptionCode(0);
 
         assert($container instanceof ContainerInterface);
-        $factory($container);
+        $laminasRbacFactory($container);
     }
 
     /**
@@ -99,7 +99,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $container->expects(self::never())
             ->method('has');
 
-        $factory = new LaminasRbacFactory();
+        $laminasRbacFactory = new LaminasRbacFactory();
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
@@ -108,7 +108,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $this->expectExceptionCode(0);
 
         assert($container instanceof ContainerInterface);
-        $factory($container);
+        $laminasRbacFactory($container);
     }
 
     /**
@@ -133,7 +133,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $container->expects(self::never())
             ->method('has');
 
-        $factory = new LaminasRbacFactory();
+        $laminasRbacFactory = new LaminasRbacFactory();
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
@@ -142,7 +142,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $this->expectExceptionCode(0);
 
         assert($container instanceof ContainerInterface);
-        $factory($container);
+        $laminasRbacFactory($container);
     }
 
     /**
@@ -168,11 +168,11 @@ final class LaminasRbacFactoryTest extends TestCase
         $container->expects(self::never())
             ->method('has');
 
-        $factory = new LaminasRbacFactory();
+        $laminasRbacFactory = new LaminasRbacFactory();
 
         assert($container instanceof ContainerInterface);
-        $laminasRbac = $factory($container);
-        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
+        $authorization = $laminasRbacFactory($container);
+        self::assertInstanceOf(LaminasRbac::class, $authorization);
     }
 
     /**
@@ -209,11 +209,11 @@ final class LaminasRbacFactoryTest extends TestCase
         $container->expects(self::never())
             ->method('has');
 
-        $factory = new LaminasRbacFactory();
+        $laminasRbacFactory = new LaminasRbacFactory();
 
         assert($container instanceof ContainerInterface);
-        $laminasRbac = $factory($container);
-        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
+        $authorization = $laminasRbacFactory($container);
+        self::assertInstanceOf(LaminasRbac::class, $authorization);
     }
 
     /**
@@ -241,7 +241,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $container->expects(self::never())
             ->method('has');
 
-        $factory = new LaminasRbacFactory();
+        $laminasRbacFactory = new LaminasRbacFactory();
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
@@ -250,7 +250,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $this->expectExceptionCode(0);
 
         assert($container instanceof ContainerInterface);
-        $factory($container);
+        $laminasRbacFactory($container);
     }
 
     /**
@@ -283,14 +283,14 @@ final class LaminasRbacFactoryTest extends TestCase
         $container->expects(self::never())
             ->method('has');
 
-        $factory = new LaminasRbacFactory();
+        $laminasRbacFactory = new LaminasRbacFactory();
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('No role with name "contributor" could be found');
         $this->expectExceptionCode(0);
 
         assert($container instanceof ContainerInterface);
-        $factory($container);
+        $laminasRbacFactory($container);
     }
 
     /**
@@ -397,19 +397,19 @@ final class LaminasRbacFactoryTest extends TestCase
         $rbac->expects(self::once())
             ->method('isGranted')
             ->with('contributor', 'admin.settings', $interface)
-            ->willReturn(true);
+            ->willReturn(value: true);
 
-        $factory = new LaminasRbacFactory();
+        $laminasRbacFactory = new LaminasRbacFactory();
 
-        $rbacProp = new ReflectionProperty($factory, 'rbac');
-        $rbacProp->setValue($factory, $rbac);
+        $reflectionProperty = new ReflectionProperty($laminasRbacFactory, 'rbac');
+        $reflectionProperty->setValue($laminasRbacFactory, $rbac);
 
         assert($container instanceof ContainerInterface);
-        $laminasRbac = $factory($container);
-        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
+        $authorization = $laminasRbacFactory($container);
+        self::assertInstanceOf(LaminasRbac::class, $authorization);
 
         self::assertTrue(
-            $laminasRbac->isGranted('contributor', 'admin.settings', null, assertion: $interface),
+            $authorization->isGranted('contributor', 'admin.settings', assertion: $interface),
         );
     }
 }

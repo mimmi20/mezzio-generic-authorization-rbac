@@ -30,7 +30,7 @@ final class LaminasRbacTest extends TestCase
      */
     public function testConstructorWithoutAssertion(): void
     {
-        $rbac = $this->createMock(Rbac::class);
+        $rbac = self::createStub(Rbac::class);
 
         $laminasRbac = new LaminasRbac($rbac);
 
@@ -44,7 +44,7 @@ final class LaminasRbacTest extends TestCase
      */
     public function testConstructorWithAssertion(): void
     {
-        $rbac = $this->createMock(Rbac::class);
+        $rbac = self::createStub(Rbac::class);
 
         $laminasRbac = new LaminasRbac($rbac);
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
@@ -65,7 +65,7 @@ final class LaminasRbacTest extends TestCase
         $rbac->expects(self::once())
             ->method('isGranted')
             ->with($role, $resource, null)
-            ->willReturn(true);
+            ->willReturn(value: true);
 
         $laminasRbac = new LaminasRbac($rbac);
 
@@ -126,7 +126,7 @@ final class LaminasRbacTest extends TestCase
         $rbac->expects(self::once())
             ->method('isGranted')
             ->with($role, $resource, $assertion)
-            ->willReturn(true);
+            ->willReturn(value: true);
 
         $laminasRbac = new LaminasRbac($rbac);
 
@@ -173,7 +173,7 @@ final class LaminasRbacTest extends TestCase
         $role     = 'foo';
         $resource = 'bar';
 
-        $request = $this->createMock(ServerRequestInterface::class);
+        $request = self::createStub(ServerRequestInterface::class);
 
         $assertion = $this->createMock(LaminasRbacAssertionInterface::class);
         $assertion->expects(self::once())
@@ -184,12 +184,12 @@ final class LaminasRbacTest extends TestCase
         $rbac->expects(self::once())
             ->method('isGranted')
             ->with($role, $resource, $assertion)
-            ->willReturn(true);
+            ->willReturn(value: true);
 
         $laminasRbac = new LaminasRbac($rbac);
 
         self::assertTrue(
-            $laminasRbac->isGranted($role, $resource, null, $request, assertion: $assertion),
+            $laminasRbac->isGranted($role, $resource, request: $request, assertion: $assertion),
         );
     }
 }
