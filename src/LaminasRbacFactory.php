@@ -92,7 +92,7 @@ final class LaminasRbacFactory
      */
     private function injectRoles(array $roles): void
     {
-        $this->rbac->setCreateMissingRoles(true);
+        $this->rbac->setCreateMissingRoles(createMissingRoles: true);
 
         // Roles and parents
         foreach ($roles as $role => $parents) {
