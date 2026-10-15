@@ -16,18 +16,13 @@ namespace Mimmi20\Mezzio\GenericAuthorization\Rbac;
 use Laminas\Permissions\Rbac\Exception\InvalidArgumentException;
 use Laminas\Permissions\Rbac\Rbac;
 use Mimmi20\Mezzio\GenericAuthorization\Exception\RuntimeException;
-use PHPUnit\Event\NoPreviousThrowableException;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
 final class LaminasRbacTest extends TestCase
 {
-    /**
-     * @throws Exception
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
+    /** @throws Exception */
     public function testConstructorWithoutAssertion(): void
     {
         $rbac = self::createStub(Rbac::class);
@@ -37,11 +32,7 @@ final class LaminasRbacTest extends TestCase
         self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    /**
-     * @throws Exception
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
+    /** @throws Exception */
     public function testConstructorWithAssertion(): void
     {
         $rbac = self::createStub(Rbac::class);
@@ -53,8 +44,6 @@ final class LaminasRbacTest extends TestCase
     /**
      * @throws RuntimeException
      * @throws Exception
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testIsGrantedWithoutAssertion(): void
     {
@@ -75,8 +64,6 @@ final class LaminasRbacTest extends TestCase
     /**
      * @throws RuntimeException
      * @throws Exception
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testIsGrantedWithoutRole(): void
     {
@@ -92,8 +79,6 @@ final class LaminasRbacTest extends TestCase
     /**
      * @throws RuntimeException
      * @throws Exception
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testIsGrantedWithoutResource(): void
     {
@@ -111,8 +96,6 @@ final class LaminasRbacTest extends TestCase
     /**
      * @throws RuntimeException
      * @throws Exception
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testIsGrantedWitAssertion(): void
     {
@@ -133,12 +116,7 @@ final class LaminasRbacTest extends TestCase
         self::assertTrue($laminasRbac->isGranted($role, $resource, assertion: $assertion));
     }
 
-    /**
-     * @throws RuntimeException
-     * @throws Exception
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
+    /** @throws RuntimeException */
     public function testIsGrantedWitAssertionException(): void
     {
         $role      = 'foo';
@@ -165,8 +143,6 @@ final class LaminasRbacTest extends TestCase
     /**
      * @throws RuntimeException
      * @throws Exception
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testIsGrantedWitAssertionAndRequest(): void
     {
