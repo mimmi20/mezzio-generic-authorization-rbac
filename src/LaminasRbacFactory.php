@@ -16,7 +16,6 @@ namespace Mimmi20\Mezzio\GenericAuthorization\Rbac;
 use Laminas\Permissions\Rbac\Exception\ExceptionInterface as RbacExceptionInterface;
 use Laminas\Permissions\Rbac\Rbac;
 use Laminas\Permissions\Rbac\RoleInterface;
-use Mimmi20\Mezzio\GenericAuthorization\AuthorizationInterface;
 use Mimmi20\Mezzio\GenericAuthorization\Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -36,7 +35,7 @@ final class LaminasRbacFactory
     }
 
     /** @throws Exception\InvalidConfigException */
-    public function __invoke(ContainerInterface $container): AuthorizationInterface
+    public function __invoke(ContainerInterface $container): LaminasRbac
     {
         try {
             $config = $container->get('config');

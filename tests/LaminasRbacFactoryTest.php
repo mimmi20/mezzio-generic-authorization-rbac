@@ -18,7 +18,6 @@ use Laminas\Permissions\Rbac\RoleInterface;
 use Laminas\ServiceManager\Exception\ServiceNotFoundException;
 use Mimmi20\Mezzio\GenericAuthorization\Exception\InvalidConfigException;
 use Mimmi20\Mezzio\GenericAuthorization\Exception\RuntimeException;
-use PHPUnit\Event\NoPreviousThrowableException;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -29,12 +28,7 @@ use function assert;
 
 final class LaminasRbacFactoryTest extends TestCase
 {
-    /**
-     * @throws Exception
-     * @throws InvalidConfigException
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
+    /** @throws InvalidConfigException */
     public function testFactoryWithoutConfig(): void
     {
         $container = $this->createMock(ContainerInterface::class);
@@ -57,12 +51,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $laminasRbacFactory($container);
     }
 
-    /**
-     * @throws Exception
-     * @throws InvalidConfigException
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
+    /** @throws InvalidConfigException */
     public function testFactoryWithConfigException(): void
     {
         $container = $this->createMock(ContainerInterface::class);
@@ -83,12 +72,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $laminasRbacFactory($container);
     }
 
-    /**
-     * @throws Exception
-     * @throws InvalidConfigException
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
+    /** @throws InvalidConfigException */
     public function testFactoryWithoutLaminasRbacConfig(): void
     {
         $container = $this->createMock(ContainerInterface::class);
@@ -111,12 +95,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $laminasRbacFactory($container);
     }
 
-    /**
-     * @throws Exception
-     * @throws InvalidConfigException
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
+    /** @throws InvalidConfigException */
     public function testFactoryWithoutPermissions(): void
     {
         $container = $this->createMock(ContainerInterface::class);
@@ -148,8 +127,6 @@ final class LaminasRbacFactoryTest extends TestCase
     /**
      * @throws Exception
      * @throws InvalidConfigException
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testFactoryWithEmptyRolesPermissionsWithoutAssertion(): void
     {
@@ -171,15 +148,13 @@ final class LaminasRbacFactoryTest extends TestCase
         $laminasRbacFactory = new LaminasRbacFactory();
 
         assert($container instanceof ContainerInterface);
-        $authorization = $laminasRbacFactory($container);
-        self::assertInstanceOf(LaminasRbac::class, $authorization);
+        $laminasRbac = $laminasRbacFactory($container);
+        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
     /**
      * @throws Exception
      * @throws InvalidConfigException
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testFactoryWithoutAssertion(): void
     {
@@ -212,16 +187,11 @@ final class LaminasRbacFactoryTest extends TestCase
         $laminasRbacFactory = new LaminasRbacFactory();
 
         assert($container instanceof ContainerInterface);
-        $authorization = $laminasRbacFactory($container);
-        self::assertInstanceOf(LaminasRbac::class, $authorization);
+        $laminasRbac = $laminasRbacFactory($container);
+        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
     }
 
-    /**
-     * @throws Exception
-     * @throws InvalidConfigException
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
+    /** @throws InvalidConfigException */
     public function testFactoryWithInvalidRole(): void
     {
         $container = $this->createMock(ContainerInterface::class);
@@ -253,12 +223,7 @@ final class LaminasRbacFactoryTest extends TestCase
         $laminasRbacFactory($container);
     }
 
-    /**
-     * @throws Exception
-     * @throws InvalidConfigException
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
+    /** @throws InvalidConfigException */
     public function testFactoryWithUnknownRole(): void
     {
         $container = $this->createMock(ContainerInterface::class);
@@ -298,8 +263,6 @@ final class LaminasRbacFactoryTest extends TestCase
      * @throws RuntimeException
      * @throws ReflectionException
      * @throws InvalidConfigException
-     * @throws NoPreviousThrowableException
-     * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testFactoryWithReflection(): void
     {
@@ -405,11 +368,11 @@ final class LaminasRbacFactoryTest extends TestCase
         $reflectionProperty->setValue($laminasRbacFactory, $rbac);
 
         assert($container instanceof ContainerInterface);
-        $authorization = $laminasRbacFactory($container);
-        self::assertInstanceOf(LaminasRbac::class, $authorization);
+        $laminasRbac = $laminasRbacFactory($container);
+        self::assertInstanceOf(LaminasRbac::class, $laminasRbac);
 
         self::assertTrue(
-            $authorization->isGranted('contributor', 'admin.settings', assertion: $interface),
+            $laminasRbac->isGranted('contributor', 'admin.settings', assertion: $interface),
         );
     }
 }
